@@ -4,4 +4,4 @@ project(AgentProject)
 set(CMAKE_CXX_STANDARD 14)
 
 add_executable(AgentProject
-        main.cpp)
+        main.cpp Agent.cpp Agent.h)
