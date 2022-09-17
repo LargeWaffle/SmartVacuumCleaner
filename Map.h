@@ -11,18 +11,25 @@
 
 #include <iostream>
 #include <vector>
+#include <utility>
 
 class Cell {
 	friend class Map;
 private:
-	bool m_vacuum; // à examiner
+	bool m_vacuum = false;
 	bool m_dirt = false;
 	bool m_jewel = false;
+
 public:
-	Cell(double x = 0.0, double y = 0.0); // constructor
+	Cell(double dirtRate = 0.0, double jewelRate = 0.0); // constructor
 	~Cell();
 	bool hasDirt() const;
 	bool hasJewel() const;
+	bool hasVacuum() const;
+
+	void setDirt(bool);
+	void setJewel(bool);
+	void setVacuum(bool);
 
 	friend std::ostream& operator<<(std::ostream&, const Cell& );
 
@@ -35,11 +42,18 @@ public:
 	~Map();
 
 	int getMapSize();
+	Cell* getCell(int, int);
 
 	void mapUpdator();
-	void objSpawn();
+	void objSpawn();    // thread func
+
+	void clean();
+	void pickup();
+
+	std::pair<int, int> getVacuum();
 
 	friend std::ostream& operator<<(std::ostream&, const Map& );
+
 private:
 	std::vector< std::vector<Cell*> > map;
 };

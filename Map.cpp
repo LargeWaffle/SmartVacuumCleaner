@@ -24,6 +24,14 @@ Map::~Map() {
 			delete j;
 }
 
+int Map::getMapSize() {
+	return MAP_SIZE;
+}
+
+Cell* Map::getCell(int x, int y) {
+	return map[x][y];
+}
+
 // Updator
 void Map::mapUpdator(){
 
@@ -37,12 +45,24 @@ void Map::objSpawn(){
 
 	while(true){
 		mapUpdator();
-		// cout << *this << endl;
+		// Debug line : cout << *this << endl;
 	}
 }
 
-int Map::getMapSize() {
-	return MAP_SIZE;
+void Map::clean() {
+	getCell(getVacuum().first, getVacuum().second)->m_dirt = false;
+}
+
+void Map::pickup() {
+	getCell(getVacuum().first, getVacuum().second)->m_jewel = false;
+}
+
+pair<int, int> Map::getVacuum() {
+
+	for (int i = 0; i < MAP_SIZE; i++)
+		for (int j = 0; j < MAP_SIZE; j++)
+			if(map[i][j]->hasVacuum())
+				return make_pair(i,j);
 }
 
 ostream &operator<<(ostream & output, const Map& mp) {
@@ -55,6 +75,8 @@ ostream &operator<<(ostream & output, const Map& mp) {
 	}
 	return output;
 }
+
+
 
 // Constructor
 Cell::Cell(double dirtSpawnRate, double jewelSpawnRate) {
@@ -96,11 +118,35 @@ bool Cell::hasJewel() const {
 	return m_jewel;
 }
 
+bool Cell::hasVacuum() const {
+	return m_vacuum;
+}
+
+void Cell::setDirt(bool arg) {
+	m_dirt = arg;
+}
+
+void Cell::setJewel(bool arg) {
+	m_jewel = arg;
+}
+
+void Cell::setVacuum(bool arg) {
+	m_vacuum = arg;
+}
+
 ostream& operator<<(ostream& output, const Cell& c) {
-	if (c.m_dirt && c.m_jewel)
+	if (c.m_dirt && c.m_jewel && c.m_vacuum)
+		output << "A ";
+	else if (c.m_dirt && c.m_jewel)
 		output << "B ";
+	else if (c.m_dirt && c.m_vacuum)
+		output << "DV";
+	else if (c.m_jewel && c.m_vacuum)
+		output << "JV";
 	else if (c.m_dirt)
 		output << "D ";
+	else if (c.m_vacuum)
+		output << "V ";
 	else if (c.m_jewel)
 		output << "J ";
 	else
