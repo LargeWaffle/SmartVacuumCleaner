@@ -26,9 +26,19 @@ Map::~Map() {
 
 // Updator
 void Map::mapUpdator(){
+
 	for (auto & i : map)
 		for (auto & j : i)
 			j->spawnUpdate();
+
+}
+
+void Map::objSpawn(){
+
+	while(true){
+		mapUpdator();
+		// cout << *this << endl;
+	}
 }
 
 int Map::getMapSize() {
@@ -48,9 +58,11 @@ ostream &operator<<(ostream & output, const Map& mp) {
 
 // Constructor
 Cell::Cell(double dirtSpawnRate, double jewelSpawnRate) {
+
 	m_vacuum = false;
-	double dirtProb = rand() / (RAND_MAX + 1.);
-	double jewelProb = rand() / (RAND_MAX + 1.);
+
+	int dirtProb = rand() % 100 + 1;
+	int jewelProb = rand() % 100 + 1;
 
 	if (dirtProb < INITIAL_DIRT_SPAWN_RATE)
 		m_dirt = true;
@@ -65,8 +77,8 @@ Cell::~Cell() {
 
 void Cell::spawnUpdate() {
 
-	double dirtProb = rand() / (RAND_MAX + 1.);
-	double jewelProb = rand() / (RAND_MAX + 1.);
+	int dirtProb = rand() % 100 + 1;
+	int jewelProb = rand() % 100 + 1;
 
 	if (dirtProb < DIRT_SPAWN_RATE)
 		m_dirt = true;

@@ -13,7 +13,10 @@ int main()
 
 	Map *mp = new Map();
 
-	cout << *mp << endl;
+	thread env(&Map::objSpawn, mp);
+	env.join();
+
+	// thread agent(); ou just le main en fait
 
 	return 0;
 }

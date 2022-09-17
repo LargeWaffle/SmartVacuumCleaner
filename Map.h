@@ -1,11 +1,11 @@
 #ifndef AGENTPROJECT_MAP_H
 #define AGENTPROJECT_MAP_H
 
-#define DIRT_SPAWN_RATE 0.5
-#define JEWEL_SPAWN_RATE 0.1
+#define DIRT_SPAWN_RATE 5
+#define JEWEL_SPAWN_RATE 2
 
-#define INITIAL_DIRT_SPAWN_RATE 0.2
-#define INITIAL_JEWEL_SPAWN_RATE 0.05
+#define INITIAL_DIRT_SPAWN_RATE 20
+#define INITIAL_JEWEL_SPAWN_RATE 5
 
 #define MAP_SIZE 5
 
@@ -37,6 +37,7 @@ public:
 	int getMapSize();
 
 	void mapUpdator();
+	void objSpawn();
 
 	friend std::ostream& operator<<(std::ostream&, const Map& );
 private:
