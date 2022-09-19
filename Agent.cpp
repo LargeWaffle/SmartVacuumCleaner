@@ -22,8 +22,6 @@ Agent::~Agent() {
 void Agent::doOneMove() {
 
 	while (true) {
-
-		lock_guard<mutex> lock(map->mut);
 		if(destX == sens->locate().first && destY == sens->locate().second)
 		{
 			destX = rand() % map->getMapSize();
@@ -34,5 +32,6 @@ void Agent::doOneMove() {
 			eff->travel(destX, destY);
 		}
 		cout << *map << endl;
+        map->go = true;
 	}
 }

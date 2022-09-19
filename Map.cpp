@@ -14,6 +14,7 @@ Map::Map()
 			v.push_back(new Cell(INITIAL_DIRT_SPAWN_RATE, INITIAL_JEWEL_SPAWN_RATE));
 		map.push_back(v);
 	}
+    go = false;
 }
 
 // Destructor
@@ -42,9 +43,9 @@ void Map::mapUpdator(){
 
 void Map::objSpawn(){
 	while(true) {
-		lock_guard<mutex> lock(mut);
-		mapUpdator();
-		cout << *this << endl;
+        if (go)
+		    mapUpdator();
+        go = false;
 	}
 }
 
@@ -96,9 +97,10 @@ Cell::~Cell() {
 
 void Cell::spawnUpdate() {
 
-	int dirtProb = rand() % 100 + 1;
-	int jewelProb = rand() % 100 + 1;
-	if (dirtProb < DIRT_SPAWN_RATE) {
+	int dirtProb = rand() % 100 + 1; // FIX IS HERE
+	int jewelProb = rand() % 100 + 1; // FIX IS HERE
+
+	if (dirtProb < DIRT_SPAWN_RATE)
 		m_dirt = true;
 	}
 

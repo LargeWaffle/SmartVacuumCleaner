@@ -15,7 +15,7 @@ int main()
 	Agent *vacuum = new Agent(mp);
 
 	thread env(&Map::objSpawn, mp);
-	//thread roomba(&Agent::doOneMove, vacuum);
+	thread roomba(&Agent::doOneMove, vacuum);
 
 	env.join();
 	//roomba.join();
