@@ -12,6 +12,7 @@ public:
 
 	void getDirtCoords();
 	bool isJewel();
+	std::pair<int, int> locate();
 private:
 	Map* map;
 	std::vector<std::pair<int, int>> dirtCoords;

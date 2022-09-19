@@ -1,25 +1,38 @@
 #include "Agent.h"
 #include <random>
 
+using namespace std;
+
 Agent ::Agent(Map *mp){
-	coordX = rand() % mp->getMapSize();
-	coordY = rand() % mp->getMapSize();
 
 	map = mp;
-	map->getCell(coordX, coordY)->setVacuum(true);
+	map->getCell(rand() % mp->getMapSize(), rand() % mp->getMapSize())->setVacuum(true);
 
 	eff = new Effector(mp);
 	sens = new Sensor(mp);
+
+	destX = rand() % mp->getMapSize();
+	destY = rand() % mp->getMapSize();
 }
 
 Agent::~Agent() {
 
 }
 
-int Agent::getX() {
-	return coordX;
-}
+void Agent::doOneMove() {
 
-int Agent::getY() {
-	return coordY;
+	while (true) {
+
+		lock_guard<mutex> lock(map->mut);
+		if(destX == sens->locate().first && destY == sens->locate().second)
+		{
+			destX = rand() % map->getMapSize();
+			destY = rand() % map->getMapSize();
+		}
+		else
+		{
+			eff->travel(destX, destY);
+		}
+		cout << *map << endl;
+	}
 }

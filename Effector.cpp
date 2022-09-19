@@ -30,7 +30,7 @@ void Effector::travel(int destX, int destY) {
 	int coordX = map->getVacuum().first;
 	int coordY = map->getVacuum().second;
 
-	while (destX != coordX || destY != coordY) {
+	if (destX != coordX || destY != coordY) {
 		map->getCell(coordX, coordY)->setVacuum(false);
 
 		if (destX > coordX)
@@ -43,7 +43,7 @@ void Effector::travel(int destX, int destY) {
 			coordY--;
 
 		map->getCell(coordX, coordY)->setVacuum(true);
-		cout << "IN TRAVEL : " << endl << *map << endl;
+		//cout << "IN EFFECTOR : " << endl << *map << endl;
 	}
 
 	// mesure de perf avec travelcost

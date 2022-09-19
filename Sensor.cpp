@@ -25,3 +25,7 @@ void Sensor::getDirtCoords() {
 bool Sensor::isJewel() {
 	return map->getCell(map->getVacuum().first, map->getVacuum().second)->hasJewel();
 }
+
+pair<int, int> Sensor::locate() {
+	return map->getVacuum();
+}

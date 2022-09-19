@@ -38,14 +38,13 @@ void Map::mapUpdator(){
 	for (auto & i : map)
 		for (auto & j : i)
 			j->spawnUpdate();
-
 }
 
 void Map::objSpawn(){
-
-	while(true){
+	while(true) {
+		lock_guard<mutex> lock(mut);
 		mapUpdator();
-		// Debug line : cout << *this << endl;
+		cout << *this << endl;
 	}
 }
 
@@ -76,8 +75,6 @@ ostream &operator<<(ostream & output, const Map& mp) {
 	return output;
 }
 
-
-
 // Constructor
 Cell::Cell(double dirtSpawnRate, double jewelSpawnRate) {
 
@@ -86,10 +83,10 @@ Cell::Cell(double dirtSpawnRate, double jewelSpawnRate) {
 	int dirtProb = rand() % 100 + 1;
 	int jewelProb = rand() % 100 + 1;
 
-	if (dirtProb < INITIAL_DIRT_SPAWN_RATE)
+	if (dirtProb < dirtSpawnRate)
 		m_dirt = true;
 
-	if (jewelProb < INITIAL_JEWEL_SPAWN_RATE)
+	if (jewelProb < jewelSpawnRate)
 		m_jewel = true;
 }
 
@@ -101,13 +98,12 @@ void Cell::spawnUpdate() {
 
 	int dirtProb = rand() % 100 + 1;
 	int jewelProb = rand() % 100 + 1;
-
-	if (dirtProb < DIRT_SPAWN_RATE)
+	if (dirtProb < DIRT_SPAWN_RATE) {
 		m_dirt = true;
+	}
 
 	if (jewelProb < JEWEL_SPAWN_RATE)
 		m_jewel = true;
-
 }
 
 bool Cell::hasDirt() const {

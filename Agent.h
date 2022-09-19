@@ -14,6 +14,8 @@ public:
 	int getX();
 	int getY();
 
+	void doOneMove();
+
 	Sensor * sens;
 	Effector * eff;
 private:
@@ -21,8 +23,8 @@ private:
 	float score = 0.0;
 
 	// serie d'etat/etat a atteindre
-	int coordX, coordY;
 	Map * map;
+	int destX, destY;
 };
 
 

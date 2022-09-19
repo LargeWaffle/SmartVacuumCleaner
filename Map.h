@@ -12,6 +12,7 @@
 #include <iostream>
 #include <vector>
 #include <utility>
+#include <mutex>
 
 class Cell {
 	friend class Map;
@@ -51,6 +52,7 @@ public:
 	void pickup();
 
 	std::pair<int, int> getVacuum();
+	std::mutex mut;
 
 	friend std::ostream& operator<<(std::ostream&, const Map& );
 
