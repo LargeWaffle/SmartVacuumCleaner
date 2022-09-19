@@ -12,14 +12,21 @@ Sensor::~Sensor() {
 
 }
 
-void Sensor::getDirtCoords() {
+void Sensor::retrieveDirtCoords() {
 	for (int i = 0; i < map->getMapSize(); i++)
 		for (int j = 0; j < map->getMapSize(); j++)
 		{
-			if (map->getCell(map->getVacuum().first, map->getVacuum().second)->hasDirt())
+			if (map->getCell(i, j)->hasDirt())
 				dirtCoords.emplace_back(i, j);
-
 		}
+}
+
+std::vector<std::pair<int, int>> Sensor::getDirtCoords() {
+    return dirtCoords;
+}
+
+void Sensor :: removedDirt() {
+    dirtCoords.erase(dirtCoords.begin());
 }
 
 bool Sensor::isJewel() {

@@ -19,19 +19,39 @@ Agent::~Agent() {
 
 }
 
-void Agent::doOneMove() {
+void Agent::agentWork() {
+
+    // while
+    // -- Sens environement
+    // -- Update state
+    // -- Choose action
+    // -- Do it
+
 
 	while (true) {
-		if(destX == sens->locate().first && destY == sens->locate().second)
-		{
-			destX = rand() % map->getMapSize();
-			destY = rand() % map->getMapSize();
-		}
-		else
-		{
-			eff->travel(destX, destY);
-		}
-		cout << *map << endl;
-        map->go = true;
+
+        sens->retrieveDirtCoords();
+        vector< pair<int, int> > dirtTab = sens->getDirtCoords();
+
+        int dirtIndex = 0;
+
+        for (int i = 0; i < LEARNING_RATE; i++) {
+            if (sens->locate().first != dirtTab[dirtIndex].first || sens->locate().second != dirtTab[dirtIndex].second)
+            {
+                eff->travel(dirtTab[dirtIndex].first, dirtTab[dirtIndex].second);
+                cout << "Im going towards : " << dirtTab[dirtIndex].first << dirtTab[dirtIndex].second << endl;
+            } else {
+                if (sens->isJewel())
+                    eff->pickupCell();
+                else {
+                    eff->cleanCell();
+                    sens->removedDirt();
+                    dirtIndex++;
+                }
+            }
+            cout << *map << endl;
+            map->go = true;
+        }
+        cout << "\nFinished my first learning rate\n" << endl;
 	}
 }

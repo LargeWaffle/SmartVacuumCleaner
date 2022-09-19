@@ -43,7 +43,6 @@ void Effector::travel(int destX, int destY) {
 			coordY--;
 
 		map->getCell(coordX, coordY)->setVacuum(true);
-		//cout << "IN EFFECTOR : " << endl << *map << endl;
 	}
 
 	// mesure de perf avec travelcost

@@ -1,5 +1,3 @@
-#define LEARNING_RATE 4
-
 #include <iostream>
 #include <thread>
 

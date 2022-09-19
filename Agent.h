@@ -5,16 +5,16 @@
 #include "Effector.h"
 #include "Sensor.h"
 
+#define LEARNING_RATE 4
+
 class Agent {
 
 public:
 	Agent(Map *mp);
 	~Agent();
 
-	int getX();
-	int getY();
-
-	void doOneMove();
+	void agentWork();
+    void determineNextLocations();
 
 	Sensor * sens;
 	Effector * eff;

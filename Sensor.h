@@ -10,7 +10,7 @@ public:
 	Sensor(Map*);
 	~Sensor();
 
-	void getDirtCoords();
+	void retrieveDirtCoords();
 	bool isJewel();
 	std::pair<int, int> locate();
 private:
