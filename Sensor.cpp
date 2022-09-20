@@ -36,3 +36,7 @@ bool Sensor::isJewel() {
 pair<int, int> Sensor::locate() {
 	return map->getVacuum();
 }
+
+int Sensor::dustyCells() {
+    dirtCoords.size();
+}

@@ -29,13 +29,17 @@ void Agent::agentWork() {
 
 
 	while (true) {
-
+        // Observe the environment
         sens->retrieveDirtCoords();
+
+        // Update state
         vector< pair<int, int> > dirtTab = sens->getDirtCoords();
 
+        // Choose an action
         int dirtIndex = 0;
 
         for (int i = 0; i < LEARNING_RATE; i++) {
+            // Do the action
             if (sens->locate().first != dirtTab[dirtIndex].first || sens->locate().second != dirtTab[dirtIndex].second)
             {
                 eff->travel(dirtTab[dirtIndex].first, dirtTab[dirtIndex].second);

@@ -14,7 +14,6 @@ public:
 	~Agent();
 
 	void agentWork();
-    void determineNextLocations();
 
 	Sensor * sens;
 	Effector * eff;

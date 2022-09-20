@@ -4,4 +4,4 @@ project(AgentProject)
 set(CMAKE_CXX_STANDARD 14)
 
 add_executable(AgentProject
-        main.cpp Map.cpp Map.h Sensor.cpp Sensor.h Effector.cpp Effector.h Agent.cpp Agent.h )
+        main.cpp Map.cpp Map.h Sensor.cpp Sensor.h Effector.cpp Effector.h Agent.cpp Agent.h Graph.cpp Graph.h)

@@ -15,7 +15,7 @@ public:
 	std::pair<int, int> locate();
     std::vector<std::pair<int, int>> getDirtCoords();
     void removedDirt();
-
+    int dustyCells();
 
 private:
 	Map* map;
