@@ -16,7 +16,7 @@ int main()
 	thread roomba(&Agent::doOneMove, vacuum);
 
 	env.join();
-	//roomba.join();
+	roomba.join();
 
 	return 0;
 }
