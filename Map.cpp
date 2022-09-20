@@ -102,7 +102,6 @@ void Cell::spawnUpdate() {
 
 	if (dirtProb < DIRT_SPAWN_RATE)
 		m_dirt = true;
-	}
 
 	if (jewelProb < JEWEL_SPAWN_RATE)
 		m_jewel = true;
