@@ -4,6 +4,7 @@
 #include "Map.h"
 #include "Effector.h"
 #include "Sensor.h"
+#include "Graph.h"
 
 #define LEARNING_RATE 4
 
@@ -14,9 +15,14 @@ public:
 	~Agent();
 
 	void agentWork();
+	std::vector< std::pair<int, int> > IDFS(const Graph&, int);
 
 	Sensor * sens;
 	Effector * eff;
+
+	int nbTargets;  // Desires
+	std::vector< std::pair<int, int> > actionList;    // Intentions
+
 private:
 
 	float score = 0.0;

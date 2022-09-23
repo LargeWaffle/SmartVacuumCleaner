@@ -1,19 +1,14 @@
-//
-// Created by marti on 20/09/2022.
-//
-
 #ifndef AGENTPROJECT_GRAPH_H
 #define AGENTPROJECT_GRAPH_H
 
 #include <vector>
-#include <utility>
 
 class Graph {
 
 public:
 
     Graph(int); // Constructor
-    void buildGraph();
+    void buildGraph(std::vector< std::pair<int, int> >);
 
 
 
