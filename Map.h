@@ -52,7 +52,6 @@ public:
 	void pickup();
 
 	std::pair<int, int> getVacuum();
-	bool go;
 
 	friend std::ostream& operator<<(std::ostream&, const Map& );
 

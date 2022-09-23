@@ -42,9 +42,9 @@ void Map::mapUpdator(){
 
 void Map::objSpawn(){
 	while(true) {
-        if (go)
-		    mapUpdator();
-        go = false;
+        // sleep !
+	    mapUpdator();
+		cout << *this << endl;
 	}
 }
 
@@ -78,16 +78,16 @@ ostream &operator<<(ostream & output, const Map& mp) {
 // Constructor
 Cell::Cell(double dustSpawnRate, double jewelSpawnRate) {
 
-	m_vacuum = false;
+	setVacuum(false);
 
 	int dustProb = rand() % 100 + 1;
 	int jewelProb = rand() % 100 + 1;
 
 	if (dustProb < dustSpawnRate)
-		m_dust = true;
+		setDust(true);
 
 	if (jewelProb < jewelSpawnRate)
-		m_jewel = true;
+		setJewel(true);
 }
 
 Cell::~Cell() {
@@ -100,10 +100,10 @@ void Cell::spawnUpdate() {
 	int jewelProb = rand() % 100 + 1; // FIX IS HERE
 
 	if (dustProb < DUST_SPAWN_RATE)
-		m_dust = true;
+		setDust(true);
 
 	if (jewelProb < JEWEL_SPAWN_RATE)
-		m_jewel = true;
+		setJewel(true);
 }
 
 bool Cell::hasDust() const {
@@ -131,22 +131,27 @@ void Cell::setVacuum(bool arg) {
 }
 
 ostream& operator<<(ostream& output, const Cell& c) {
-	if (c.m_dust && c.m_jewel && c.m_vacuum)
-		output << "A ";
-	else if (c.m_dust && c.m_jewel)
-		output << "B ";
-	else if (c.m_dust && c.m_vacuum)
-		output << "DV";
-	else if (c.m_jewel && c.m_vacuum)
-		output << "JV";
-	else if (c.m_dust)
-		output << "D ";
-	else if (c.m_vacuum)
-		output << "V ";
-	else if (c.m_jewel)
-		output << "J ";
-	else
-		output << ". ";
+
+	string res;
+
+	if (c.hasDust())
+		res.append("D");
+
+	if (c.hasVacuum())
+		res.append("V");
+
+	if (c.hasJewel())
+		res.append("J");
+
+	if (c.hasDust() && c.hasJewel() && c.hasVacuum())
+		res = "A";
+
+	if (res.empty())
+		res = ".";
+
+	res.append(" ");
+
+	output << res;
 
 	return output;
 }
