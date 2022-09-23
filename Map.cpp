@@ -11,7 +11,7 @@ Map::Map()
 	{
 		vector<Cell*> v;
 		for (int j = 0; j < MAP_SIZE; j++)
-			v.push_back(new Cell(INITIAL_DIRT_SPAWN_RATE, INITIAL_JEWEL_SPAWN_RATE));
+			v.push_back(new Cell(INITIAL_DUST_SPAWN_RATE, INITIAL_JEWEL_SPAWN_RATE));
 		map.push_back(v);
 	}
     go = false;
@@ -50,7 +50,7 @@ void Map::objSpawn(){
 }
 
 void Map::clean() {
-	getCell(getVacuum().first, getVacuum().second)->m_dirt = false;
+	getCell(getVacuum().first, getVacuum().second)->m_dust = false;
 }
 
 void Map::pickup() {
@@ -77,15 +77,15 @@ ostream &operator<<(ostream & output, const Map& mp) {
 }
 
 // Constructor
-Cell::Cell(double dirtSpawnRate, double jewelSpawnRate) {
+Cell::Cell(double dustSpawnRate, double jewelSpawnRate) {
 
 	m_vacuum = false;
 
-	int dirtProb = rand() % 100 + 1;
+	int dustProb = rand() % 100 + 1;
 	int jewelProb = rand() % 100 + 1;
 
-	if (dirtProb < dirtSpawnRate)
-		m_dirt = true;
+	if (dustProb < dustSpawnRate)
+		m_dust = true;
 
 	if (jewelProb < jewelSpawnRate)
 		m_jewel = true;
@@ -97,18 +97,18 @@ Cell::~Cell() {
 
 void Cell::spawnUpdate() {
 
-	int dirtProb = rand() % 100 + 1; // FIX IS HERE
+	int dustProb = rand() % 100 + 1; // FIX IS HERE
 	int jewelProb = rand() % 100 + 1; // FIX IS HERE
 
-	if (dirtProb < DIRT_SPAWN_RATE)
-		m_dirt = true;
+	if (dustProb < DUST_SPAWN_RATE)
+		m_dust = true;
 
 	if (jewelProb < JEWEL_SPAWN_RATE)
 		m_jewel = true;
 }
 
-bool Cell::hasDirt() const {
-	return m_dirt;
+bool Cell::hasDust() const {
+	return m_dust;
 }
 
 bool Cell::hasJewel() const {
@@ -119,8 +119,8 @@ bool Cell::hasVacuum() const {
 	return m_vacuum;
 }
 
-void Cell::setDirt(bool arg) {
-	m_dirt = arg;
+void Cell::setDust(bool arg) {
+	m_dust = arg;
 }
 
 void Cell::setJewel(bool arg) {
@@ -132,15 +132,15 @@ void Cell::setVacuum(bool arg) {
 }
 
 ostream& operator<<(ostream& output, const Cell& c) {
-	if (c.m_dirt && c.m_jewel && c.m_vacuum)
+	if (c.m_dust && c.m_jewel && c.m_vacuum)
 		output << "A ";
-	else if (c.m_dirt && c.m_jewel)
+	else if (c.m_dust && c.m_jewel)
 		output << "B ";
-	else if (c.m_dirt && c.m_vacuum)
+	else if (c.m_dust && c.m_vacuum)
 		output << "DV";
 	else if (c.m_jewel && c.m_vacuum)
 		output << "JV";
-	else if (c.m_dirt)
+	else if (c.m_dust)
 		output << "D ";
 	else if (c.m_vacuum)
 		output << "V ";

@@ -30,27 +30,27 @@ void Agent::agentWork() {
 
 	while (true) {
         // Observe the environment
-        sens->retrieveDirtCoords();
+        sens->retrieveDustCoords();
 
         // Update state
-        vector< pair<int, int> > dirtTab = sens->getDirtCoords();
+        vector< pair<int, int> > dustCoords = sens->getDustCoords();
 
         // Choose an action
-        int dirtIndex = 0;
+        int dustIndex = 0;
 
         for (int i = 0; i < LEARNING_RATE; i++) {
             // Do the action
-            if (sens->locate().first != dirtTab[dirtIndex].first || sens->locate().second != dirtTab[dirtIndex].second)
+            if (sens->locate().first != dustCoords[dustIndex].first || sens->locate().second != dustCoords[dustIndex].second)
             {
-                eff->travel(dirtTab[dirtIndex].first, dirtTab[dirtIndex].second);
-                cout << "Im going towards : " << dirtTab[dirtIndex].first << dirtTab[dirtIndex].second << endl;
+                eff->travel(dustCoords[dustIndex].first, dustCoords[dustIndex].second);
+                cout << "Im going towards : " << dustCoords[dustIndex].first << dustCoords[dustIndex].second << endl;
             } else {
                 if (sens->isJewel())
                     eff->pickupCell();
                 else {
                     eff->cleanCell();
-                    sens->removedDirt();
-                    dirtIndex++;
+                    sens->removedDust();
+                    dustIndex++;
                 }
             }
             cout << *map << endl;

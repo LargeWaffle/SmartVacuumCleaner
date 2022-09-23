@@ -1,10 +1,10 @@
 #ifndef AGENTPROJECT_MAP_H
 #define AGENTPROJECT_MAP_H
 
-#define DIRT_SPAWN_RATE 5
+#define DUST_SPAWN_RATE 5
 #define JEWEL_SPAWN_RATE 2
 
-#define INITIAL_DIRT_SPAWN_RATE 20
+#define INITIAL_DUST_SPAWN_RATE 20
 #define INITIAL_JEWEL_SPAWN_RATE 5
 
 #define MAP_SIZE 5
@@ -18,17 +18,17 @@ class Cell {
 	friend class Map;
 private:
 	bool m_vacuum = false;
-	bool m_dirt = false;
+	bool m_dust = false;
 	bool m_jewel = false;
 
 public:
-	Cell(double dirtRate = 0.0, double jewelRate = 0.0); // constructor
+	Cell(double dustRate = 0.0, double jewelRate = 0.0); // constructor
 	~Cell();
-	bool hasDirt() const;
+	bool hasDust() const;
 	bool hasJewel() const;
 	bool hasVacuum() const;
 
-	void setDirt(bool);
+	void setDust(bool);
 	void setJewel(bool);
 	void setVacuum(bool);
 

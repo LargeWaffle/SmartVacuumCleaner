@@ -12,21 +12,21 @@ Sensor::~Sensor() {
 
 }
 
-void Sensor::retrieveDirtCoords() {
+void Sensor::retrieveDustCoords() {
 	for (int i = 0; i < map->getMapSize(); i++)
 		for (int j = 0; j < map->getMapSize(); j++)
 		{
-			if (map->getCell(i, j)->hasDirt())
-				dirtCoords.emplace_back(i, j);
+			if (map->getCell(i, j)->hasDust())
+				dustCoords.emplace_back(i, j);
 		}
 }
 
-std::vector<std::pair<int, int>> Sensor::getDirtCoords() {
-    return dirtCoords;
+std::vector<std::pair<int, int>> Sensor::getDustCoords() {
+    return dustCoords;
 }
 
-void Sensor :: removedDirt() {
-    dirtCoords.erase(dirtCoords.begin());
+void Sensor :: removedDust() {
+    dustCoords.erase(dustCoords.begin());
 }
 
 bool Sensor::isJewel() {
@@ -38,5 +38,5 @@ pair<int, int> Sensor::locate() {
 }
 
 int Sensor::dustyCells() {
-    dirtCoords.size();
+    dustCoords.size();
 }
