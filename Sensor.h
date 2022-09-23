@@ -10,11 +10,10 @@ public:
 	Sensor(Map*);
 	~Sensor();
 
-	void retrieveDustCoords();
 	bool isJewel();
-	std::pair<int, int> locate();
+	std::pair<int, int> locateAgent();
     std::vector<std::pair<int, int>> getDustCoords();
-    void removedDust();
+    void removeDust();
     int dustyCells();
 
 private:

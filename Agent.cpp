@@ -13,12 +13,12 @@ Agent ::Agent(Map *mp){
 
 	nbTargets = 0;
 	actionList = {};
-
-	destX = rand() % mp->getMapSize();
-	destY = rand() % mp->getMapSize();
 }
 
 Agent::~Agent() {
+
+	delete eff;
+	delete sens;
 
 }
 
@@ -29,31 +29,30 @@ void Agent::agentWork() {
     // -- Update state
     // -- Choose action
     // -- Do it
-	
+
 	while (true) {
 
-        sens->retrieveDustCoords(); // Observe the environment
-        vector< pair<int, int> > dustCoords = sens->getDustCoords();    // Update state
+        vector< pair<int, int> > dustCoords = sens->getDustCoords();    // Observe & update state
 
-		nbTargets = dustCoords.size();  // Desires ? Functions returns number of steps to do
+		nbTargets = sens->dustyCells();  // Desires ? Functions returns number of steps to do
 
 		Graph problem = Graph(LEARNING_RATE);
 		problem.buildGraph(dustCoords);
 
 		if (actionList.empty())
-			actionList = IDFS(problem, nbTargets);
+			actionList = getActions(problem, nbTargets);
 
 		int targetX = actionList[0].first, targetY = actionList[0].second;
 
 		eff->travel(targetX, targetY);
 
-		if (sens->locate().first == targetX && sens->locate().second == targetY)
+		if (sens->locateAgent().first == targetX && sens->locateAgent().second == targetY)
 		{
 			if (sens->isJewel())
 				eff->pickupCell();
 			else {
 				eff->cleanCell();
-				sens->removedDust();
+				sens->removeDust();
 			}
 
 			actionList.erase(actionList.begin());
@@ -65,7 +64,7 @@ void Agent::agentWork() {
 
         for (int i = 0; i < LEARNING_RATE; i++) {
             // Do the action
-            if (sens->locate().first != dustCoords[dustIndex].first || sens->locate().second != dustCoords[dustIndex].second)
+            if (sens->locateAgent().first != dustCoords[dustIndex].first || sens->locateAgent().second != dustCoords[dustIndex].second)
             {
                 eff->travel(dustCoords[dustIndex].first, dustCoords[dustIndex].second);
                 cout << "Im going towards : " << dustCoords[dustIndex].first << dustCoords[dustIndex].second << endl;
@@ -74,7 +73,7 @@ void Agent::agentWork() {
                     eff->pickupCell();
                 else {
                     eff->cleanCell();
-                    sens->removedDust();
+                    sens->removeDust();
                     dustIndex++;
                 }
             }
@@ -85,8 +84,8 @@ void Agent::agentWork() {
 	}
 }
 
-std::vector< std::pair<int, int> > Agent::IDFS(const Graph& problem, int depth) {
+std::vector<std::pair<int, int> > Agent::getActions(Graph problem, int depth) {
 
-
-
+	problem.IDFS();
+	return std::vector<std::pair<int, int>>();
 }

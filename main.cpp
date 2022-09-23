@@ -9,6 +9,7 @@ using namespace std;
 int main()
 {
 	srand(time(nullptr));
+
 	Map *mp = new Map();
 	Agent *vacuum = new Agent(mp);
 

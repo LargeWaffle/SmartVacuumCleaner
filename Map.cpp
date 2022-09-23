@@ -14,7 +14,6 @@ Map::Map()
 			v.push_back(new Cell(INITIAL_DUST_SPAWN_RATE, INITIAL_JEWEL_SPAWN_RATE));
 		map.push_back(v);
 	}
-    go = false;
 }
 
 // Destructor

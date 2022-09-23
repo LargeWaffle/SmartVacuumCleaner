@@ -10,7 +10,8 @@ public:
     Graph(int); // Constructor
     void buildGraph(std::vector< std::pair<int, int> >);
 
-
+	void IDFS();
+	void DLS();
 
 private:
     class Node{
