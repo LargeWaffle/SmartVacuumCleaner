@@ -12,20 +12,20 @@
 class Agent {
 
 public:
-	Agent(Map *mp);
+	Agent(Map *mp, bool smart = false);
 	~Agent();
 
 	void agentWork();
 	std::pair<bool, std::pair<int, int>> BFS ();
 	void expandNode(std::pair<int, int> pos, std::queue< std::pair<int, int>>&, std::vector< std::pair<int, int>>&);
 	bool isNodeUnvisited(std::pair<int, int> , std::vector< std::pair<int, int>>&);
-	//std::vector< std::pair<int, int> > getActions(Graph, int);
+	void getActions(Graph, int);
 
 	Sensor * sens;
 	Effector * eff;
 
 	int nbTargets;  // Desires
-	std::vector< std::pair<int, int> > actionList;    // Intentions
+	std::vector< std::pair<bool, std::pair<int, int>> > actionList;    // Intentions
 
 private:
 
@@ -33,7 +33,7 @@ private:
 
 	// serie d'etat/etat a atteindre
 	Map * map;
-	bool smartAgent = false;
+	bool smartAgent;
 };
 
 

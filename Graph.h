@@ -5,16 +5,17 @@
 #include <vector>
 #include "Map.h"
 
-class Graph {
+class Graph : public Map{
 private:
     class Node{
     public:
-        int cost = 1;
         Node(std::pair<int, int> data, std::vector<Node*> child_list = {})
                 : location(std::move(data)){};
 
+        int cost = 1;
         float score = 0.0;
-        std::pair<int, int> location;
+        bool actionData = false;
+		std::pair<int, int> location;
         std::vector<Node*> children;
 
     private:
@@ -29,6 +30,7 @@ public:
     Graph(int, std::pair<int, int>); // Constructor
     ~Graph();
 
+	std::vector<std::pair<bool, std::pair<int, int>>> Astar();
     void buildGraph_Astar(std::vector< std::pair<int, int> >);
     void generateChildren(std::vector< std::pair<int, int> >, node);
     int getDistance(std::pair<int, int>, std::pair<int, int>);

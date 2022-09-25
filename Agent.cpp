@@ -4,10 +4,15 @@
 
 using namespace std;
 
-Agent::Agent(Map *mp) {
+Agent::Agent(Map *mp, bool smart) {
 
 	map = mp;
-	map->getCell(rand() % mp->getMapSize(), rand() % mp->getMapSize())->setVacuum(true);
+	smartAgent = smart;
+
+	int coordX = rand() % mp->getMapSize();
+	int coordY = rand() % mp->getMapSize();
+
+	map->getCell(coordX, coordY)->setVacuum(true);
 
 	eff = new Effector(mp);
 	sens = new Sensor(mp);
@@ -27,34 +32,29 @@ void Agent::agentWork() {
 
 	while (true) {
 
-		pair<int, int> initialVacPos = sens->locateAgent();
-		Graph problem = Graph(LEARNING_RATE, initialVacPos);
+		pair<int, int> agentLocation = sens->locateAgent();
+		Graph problem = Graph(LEARNING_RATE, agentLocation);
 
 		if (smartAgent) {
-			vector<pair<int, int> > dustCoords = sens->getDustCoords();    // Observe & update state
 
+			vector<pair<int, int> > dustCoords = sens->getDustCoords();    // Observe & update state
 			nbTargets = sens->dustyCells();  // Desires ? Function returns number of steps to take
 
+			for (int i = 0; i < LEARNING_RATE; i++) {
 
-			/*for (int i = 0; i < LEARNING_RATE; i++) {
-            if (actionList.empty())
-                actionList = getActions(problem, nbTargets);
-            else {
-                int targetX = actionList[0].first, targetY = actionList[0].second;
+				if (actionList.empty())
+					getActions(problem, nbTargets);
+				else {
+					bool targetAction = actionList[0].first;
+					pair<int, int> targetLocation = actionList[1].second;
 
-                if (sens->locateAgent().first == targetX && sens->locateAgent().second == targetY) {
-                    if (sens->isJewel())
-                        eff->pickupCell();
-                    else {
-                        eff->cleanCell();
-                        sens->removeDust();
-                    }
-                    actionList.erase(actionList.begin());
-                }
-                else
-                    eff->travel(targetX, targetY);
-            }
-        }*/
+					if (agentLocation == targetLocation) {
+						eff->actOnCell(targetAction);
+						actionList.erase(actionList.begin());
+					} else
+						eff->travel(targetLocation.first, targetLocation.second);
+				}
+			}
 
 		} else {
 
@@ -65,13 +65,17 @@ void Agent::agentWork() {
 
 			eff->travel(targetLocation.first, targetLocation.second);
 
-			if (sens->locateAgent().first == targetLocation.first &&
-			    sens->locateAgent().second == targetLocation.second)
+			if (agentLocation == targetLocation)
 				eff->actOnCell(targetAction);
 
 			cout << *map << endl;
 		}
 	}
+}
+
+void Agent::getActions(Graph problem, int nb){
+
+	actionList = problem.Astar();
 }
 
 pair<bool, pair<int, int>> Agent::BFS() {
