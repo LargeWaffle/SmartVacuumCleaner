@@ -106,6 +106,7 @@ void Agent::expandNode(pair<int, int> pos, queue<pair<int, int>> &nodeList, vect
 	if (pos.first > 0 && isNodeUnvisited(make_pair(pos.first - 1, pos.second), visited))
 		nodeList.push(make_pair(pos.first - 1, pos.second));
 
+	if (pos.first < (MAP_SIZE - 1) && isNodeUnvisited(make_pair(pos.first + 1, pos.second), visited))
 		nodeList.push(make_pair(pos.first + 1, pos.second));
 
 	if (pos.second > 0 && isNodeUnvisited(make_pair(pos.first, pos.second - 1), visited))
