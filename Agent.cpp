@@ -124,9 +124,10 @@ void Agent::expandNode(pair<int, int> pos, queue< pair<int, int>>& nodeList, vec
 }
 
 bool Agent::isNodeUnvisited(pair<int, int> pos, vector< pair<int, int>>& visited) {
-	for (auto elem: visited) {
+
+	for (auto elem: visited)
 		if (elem == pos)
 			return false;
-	}
+
 	return true;
 }
