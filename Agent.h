@@ -19,7 +19,7 @@ public:
 	std::pair<bool, std::pair<int, int>> BFS ();
 	void expandNode(std::pair<int, int> pos, std::queue< std::pair<int, int>>&, std::vector< std::pair<int, int>>&);
 	bool isNodeUnvisited(std::pair<int, int> , std::vector< std::pair<int, int>>&);
-	void getActions(Graph, int);
+	void getActions(Graph, std::vector<std::pair<int, int> > );
 
 	Sensor * sens;
 	Effector * eff;

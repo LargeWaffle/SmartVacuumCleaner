@@ -38,12 +38,11 @@ void Agent::agentWork() {
 		if (smartAgent) {
 
 			vector<pair<int, int> > dustCoords = sens->getDustCoords();    // Observe & update state
-			nbTargets = sens->dustyCells();  // Desires ? Function returns number of steps to take
 
 			for (int i = 0; i < LEARNING_RATE; i++) {
 
 				if (actionList.empty())
-					getActions(problem, nbTargets);
+					getActions(problem, dustCoords);
 				else {
 					bool targetAction = actionList[0].first;
 					pair<int, int> targetLocation = actionList[1].second;
@@ -73,8 +72,11 @@ void Agent::agentWork() {
 	}
 }
 
-void Agent::getActions(Graph problem, int nb){
+void Agent::getActions(Graph problem, vector<pair<int, int> > coords){
 
+	nbTargets = sens->dustyCells();  // Desires ? Function returns number of steps to take
+
+	problem.buildGraph_Astar(coords);
 	actionList = problem.Astar();
 }
 
