@@ -3,6 +3,7 @@
 
 #include <utility>
 #include <vector>
+#include "Map.h"
 
 class Graph {
 private:
@@ -28,12 +29,9 @@ public:
     Graph(int, std::pair<int, int>); // Constructor
     ~Graph();
 
-    void buildGraph(std::vector< std::pair<int, int> >);
+    void buildGraph_Astar(std::vector< std::pair<int, int> >);
     void generateChildren(std::vector< std::pair<int, int> >, node);
     int getDistance(std::pair<int, int>, std::pair<int, int>);
-
-    //std::vector<std::pair<int, int>> UCS();
-
 };
 
 

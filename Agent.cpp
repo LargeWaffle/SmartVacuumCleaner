@@ -4,7 +4,7 @@
 
 using namespace std;
 
-Agent ::Agent(Map *mp){
+Agent::Agent(Map *mp) {
 
 	map = mp;
 	map->getCell(rand() % mp->getMapSize(), rand() % mp->getMapSize())->setVacuum(true);
@@ -25,21 +25,16 @@ Agent::~Agent() {
 
 void Agent::agentWork() {
 
-	// while
-	// -- Sens environement
-	// -- Update state
-	// -- Choose action
-	// -- Do it
-
 	while (true) {
+
+		pair<int, int> initialVacPos = sens->locateAgent();
+		Graph problem = Graph(LEARNING_RATE, initialVacPos);
+
 		if (smartAgent) {
 			vector<pair<int, int> > dustCoords = sens->getDustCoords();    // Observe & update state
 
 			nbTargets = sens->dustyCells();  // Desires ? Function returns number of steps to take
-			pair<int, int> initialVacPos = sens->locateAgent();
 
-			Graph problem = Graph(LEARNING_RATE, initialVacPos);
-			problem.buildGraph(dustCoords);
 
 			/*for (int i = 0; i < LEARNING_RATE; i++) {
             if (actionList.empty())
@@ -62,6 +57,7 @@ void Agent::agentWork() {
         }*/
 
 		} else {
+
 			pair<bool, pair<int, int>> target = BFS();
 
 			bool targetAction = target.first;
@@ -78,28 +74,26 @@ void Agent::agentWork() {
 	}
 }
 
-pair<bool, pair<int, int>> Agent::BFS(){
+pair<bool, pair<int, int>> Agent::BFS() {
 
 	vector<pair<int, int>> visited;
-	queue< pair<int, int> > qu;
+	queue<pair<int, int> > qu;
 
 	qu.push(sens->locateAgent());
 
-	while(!qu.empty())
-	{
+	while (!qu.empty()) {
 		pair<int, int> node = qu.front();
 		qu.pop();
 
-		if (sens->isDust(node.first, node.second)){
+		if (sens->isDust(node.first, node.second)) {
 
-			pair<bool, pair<int, int>> action = make_pair(0, node);
+			pair<bool, pair<int, int>> action = make_pair(false, node);
 
 			if (sens->isJewel(node.first, node.second))
-				action.first = 1;
+				action.first = true;
 
 			return action;
-		}
-		else {
+		} else {
 			visited.push_back(node);
 			expandNode(node, qu, visited);
 		}
@@ -107,23 +101,21 @@ pair<bool, pair<int, int>> Agent::BFS(){
 	return make_pair(0, sens->locateAgent());
 }
 
-void Agent::expandNode(pair<int, int> pos, queue< pair<int, int>>& nodeList, vector< pair<int, int>>& visited) {
+void Agent::expandNode(pair<int, int> pos, queue<pair<int, int>> &nodeList, vector<pair<int, int>> &visited) {
 
-	if (pos.first > 0 && isNodeUnvisited(make_pair(pos.first-1, pos.second), visited))
-		nodeList.push(make_pair(pos.first-1, pos.second));
+	if (pos.first > 0 && isNodeUnvisited(make_pair(pos.first - 1, pos.second), visited))
+		nodeList.push(make_pair(pos.first - 1, pos.second));
 
-	if (pos.first < (MAP_SIZE-1) && isNodeUnvisited(make_pair(pos.first+1, pos.second), visited))
-		nodeList.push(make_pair(pos.first+1, pos.second));
+		nodeList.push(make_pair(pos.first + 1, pos.second));
 
-	if (pos.second > 0 && isNodeUnvisited(make_pair(pos.first, pos.second-1), visited))
-		nodeList.push(make_pair(pos.first, pos.second-1));
+	if (pos.second > 0 && isNodeUnvisited(make_pair(pos.first, pos.second - 1), visited))
+		nodeList.push(make_pair(pos.first, pos.second - 1));
 
-	if (pos.second < (MAP_SIZE-1) && isNodeUnvisited(make_pair(pos.first, pos.second+1), visited))
-		nodeList.push(make_pair(pos.first, pos.second+1));
-
+	if (pos.second < (MAP_SIZE - 1) && isNodeUnvisited(make_pair(pos.first, pos.second + 1), visited))
+		nodeList.push(make_pair(pos.first, pos.second + 1));
 }
 
-bool Agent::isNodeUnvisited(pair<int, int> pos, vector< pair<int, int>>& visited) {
+bool Agent::isNodeUnvisited(pair<int, int> pos, vector<pair<int, int>> &visited) {
 
 	for (auto elem: visited)
 		if (elem == pos)
