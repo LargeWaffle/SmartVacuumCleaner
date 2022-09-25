@@ -44,7 +44,7 @@ void Map::mapUpdator(){
 
 void Map::objSpawn(){
 	while(true) {
-        this_thread::sleep_for(chrono::seconds(1));
+        this_thread::sleep_for(chrono::milliseconds(5));
 	    mapUpdator();
 		// cout << *this << endl;
 	}

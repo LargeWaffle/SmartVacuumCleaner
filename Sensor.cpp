@@ -29,8 +29,12 @@ void Sensor :: removeDust() {
     dustCoords.erase(dustCoords.begin());
 }
 
-bool Sensor::isJewel() {
-	return map->getCell(map->getVacuum().first, map->getVacuum().second)->hasJewel();
+bool Sensor::isJewel(int x, int y) {
+	return map->getCell(x, y)->hasJewel();
+}
+
+bool Sensor::isDust(int x, int y) {
+	return map->getCell(x, y)->hasDust();
 }
 
 pair<int, int> Sensor::locateAgent() {

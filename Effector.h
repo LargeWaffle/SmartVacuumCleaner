@@ -9,10 +9,9 @@ public:
 	Effector(Map*);
 	~Effector();
 
-	void cleanCell();
-	void pickupCell();
 	int travelCost(int, int);
 	void travel(int, int);
+	void actOnCell(bool);
 private:
 	Map * map;
 };

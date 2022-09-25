@@ -12,12 +12,12 @@ Effector::~Effector() {
 
 }
 
-void Effector::cleanCell() {
-	map->clean();
-}
+void Effector::actOnCell(bool targetAction) {
 
-void Effector::pickupCell() {
-	map->pickup();
+	if (targetAction)
+		map->pickup();
+
+	map->clean();
 }
 
 int Effector::travelCost(int destX, int destY) {
