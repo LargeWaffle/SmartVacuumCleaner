@@ -34,53 +34,33 @@ void Agent::agentWork() {
 
         vector< pair<int, int> > dustCoords = sens->getDustCoords();    // Observe & update state
 
-		nbTargets = sens->dustyCells();  // Desires ? Functions returns number of steps to do
+        nbTargets = sens->dustyCells();  // Desires ? Function returns number of steps to take
+        pair<int, int> initialVacPos = sens->locateAgent();
 
-		Graph problem = Graph(LEARNING_RATE);
-		problem.buildGraph(dustCoords);
+        Graph problem = Graph(LEARNING_RATE, initialVacPos);
+        problem.buildGraph(dustCoords);
 
-		if (actionList.empty())
-			actionList = getActions(problem, nbTargets);
+        cout << "hello"  << endl;
 
-		int targetX = actionList[0].first, targetY = actionList[0].second;
+        /*for (int i = 0; i < LEARNING_RATE; i++) {
+            if (actionList.empty())
+                actionList = getActions(problem, nbTargets);
+            else {
+                int targetX = actionList[0].first, targetY = actionList[0].second;
 
-		eff->travel(targetX, targetY);
-
-		if (sens->locateAgent().first == targetX && sens->locateAgent().second == targetY)
-		{
-			if (sens->isJewel())
-				eff->pickupCell();
-			else {
-				eff->cleanCell();
-				sens->removeDust();
-			}
-
-			actionList.erase(actionList.begin());
-		}
-
-        /*
-         * // Choose an action
-        int dustIndex = 0;
-
-        for (int i = 0; i < LEARNING_RATE; i++) {
-            // Do the action
-            if (sens->locateAgent().first != dustCoords[dustIndex].first || sens->locateAgent().second != dustCoords[dustIndex].second)
-            {
-                eff->travel(dustCoords[dustIndex].first, dustCoords[dustIndex].second);
-                cout << "Im going towards : " << dustCoords[dustIndex].first << dustCoords[dustIndex].second << endl;
-            } else {
-                if (sens->isJewel())
-                    eff->pickupCell();
-                else {
-                    eff->cleanCell();
-                    sens->removeDust();
-                    dustIndex++;
+                if (sens->locateAgent().first == targetX && sens->locateAgent().second == targetY) {
+                    if (sens->isJewel())
+                        eff->pickupCell();
+                    else {
+                        eff->cleanCell();
+                        sens->removeDust();
+                    }
+                    actionList.erase(actionList.begin());
                 }
+                else
+                    eff->travel(targetX, targetY);
             }
-            cout << *map << endl;
-            map->go = true;
-        }
-        cout << "\nFinished my first learning rate\n" << endl;*/
+        }*/
 	}
 }
 

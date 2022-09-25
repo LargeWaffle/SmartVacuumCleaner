@@ -7,27 +7,14 @@ class Graph {
 
 public:
 
-    Graph(int); // Constructor
+    Graph(int, std::pair<int, int>); // Constructor
+    ~Graph();
+
     void buildGraph(std::vector< std::pair<int, int> >);
+    void generateChildren(std::vector< std::pair<int, int> >, node);
+    int getDistance(std::pair<int, int>, std::pair<int, int>);
 
-	void IDFS();
-	void DLS();
-
-private:
-    class Node{
-        public:
-
-            Node(std::pair<int, int> dust_data, std::vector<Node*> child_list = {})
-            : location(dust_data){};
-        private:
-            float score = 0.0;
-            std::pair<int, int> location;
-            std::vector<Node*> children;
-    };
-    typedef Node * node;
-
-    node root;
-    int learning_rate;
+    //std::vector<std::pair<int, int>> UCS();
 
 };
 

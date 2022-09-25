@@ -30,7 +30,7 @@ void Effector::travel(int destX, int destY) {
 	int coordX = map->getVacuum().first;
 	int coordY = map->getVacuum().second;
 
-	while (destX != coordX || destY != coordY) {
+	if (destX != coordX || destY != coordY) {
 		map->getCell(coordX, coordY)->setVacuum(false);
 
 		if (destX > coordX)

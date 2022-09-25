@@ -15,7 +15,7 @@ public:
 	~Agent();
 
 	void agentWork();
-	std::vector< std::pair<int, int> > getActions(Graph, int);
+	//std::vector< std::pair<int, int> > getActions(Graph, int);
 
 	Sensor * sens;
 	Effector * eff;

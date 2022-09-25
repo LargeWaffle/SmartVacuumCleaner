@@ -44,7 +44,7 @@ void Map::objSpawn(){
 	while(true) {
         // sleep !
 	    mapUpdator();
-		cout << *this << endl;
+		// cout << *this << endl;
 	}
 }
 
