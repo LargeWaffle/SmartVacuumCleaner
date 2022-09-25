@@ -64,8 +64,8 @@ void Agent::agentWork() {
 	}
 }
 
-std::vector<std::pair<int, int> > Agent::getActions(Graph problem, int depth) {
+/*vector<std::pair<int, int> > Agent::getActions(Graph problem, int depth) {
 
-	problem.IDFS();
-	return std::vector<std::pair<int, int>>();
-}
+    vector<std::pair<int, int>> actions = problem.UCS();
+	return actions;
+}*/

@@ -1,5 +1,7 @@
 #include "Map.h"
 
+#include <thread>
+#include <chrono>
 #include <random>
 
 using namespace std;
@@ -42,7 +44,7 @@ void Map::mapUpdator(){
 
 void Map::objSpawn(){
 	while(true) {
-        // sleep !
+        this_thread::sleep_for(chrono::seconds(1));
 	    mapUpdator();
 		// cout << *this << endl;
 	}

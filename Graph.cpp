@@ -1,11 +1,13 @@
 #include "Graph.h"
+#include <cmath>
+#include <iostream>
 
 using namespace std;
 
-Graph::Graph(int LR)
+Graph::Graph(int lr, pair<int, int> vacPos)
 {
-    learning_rate = LR;
-
+    learning_rate = lr;
+    root = new Node(vacPos);
 }
 
 Graph::~Graph()
@@ -51,11 +53,3 @@ int Graph::getDistance (pair<int, int> a, pair<int, int> b) {
 vector< pair<int, int> > Graph::UCS(int goal, int start) {
 
 }*/
-
-void Graph::IDFS() {
-
-}
-
-void Graph::DLS() {
-
-}
