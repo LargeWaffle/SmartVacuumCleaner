@@ -39,13 +39,13 @@ void Agent::agentWork() {
 
 			vector<pair<int, int> > dustCoords = sens->getDustCoords();    // Observe & update state
 
-			for (int i = 0; i < LEARNING_RATE; i++) {
+			//for (int i = 0; i < LEARNING_RATE; i++) {
 
 				if (actionList.empty())
 					getActions(problem, dustCoords);
 				else {
 					bool targetAction = actionList[0].first;
-					pair<int, int> targetLocation = actionList[1].second;
+					pair<int, int> targetLocation = actionList[0].second;
 
 					if (agentLocation == targetLocation) {
 						eff->actOnCell(targetAction);
@@ -53,7 +53,7 @@ void Agent::agentWork() {
 					} else
 						eff->travel(targetLocation.first, targetLocation.second);
 				}
-			}
+			//}
 
 		} else {
 
@@ -72,7 +72,7 @@ void Agent::agentWork() {
 	}
 }
 
-void Agent::getActions(Graph problem, vector<pair<int, int> > coords){
+void Agent::getActions(Graph problem, vector<pair<int, int> > dustCoords){
 
 	nbTargets = sens->dustyCells();  // Desires ? Function returns number of steps to take
 

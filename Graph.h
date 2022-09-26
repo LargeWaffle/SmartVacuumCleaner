@@ -3,7 +3,7 @@
 
 #include <utility>
 #include <vector>
-#include "Map.h"
+#include "Agent.h"
 
 class Graph {
 private:
@@ -14,8 +14,13 @@ private:
 
         int cost = 1;
         bool actionData = false;
+
 		std::pair<int, int> location;
         std::vector<Node*> children;
+
+        bool operator<(const node& nd) const{
+            return cost < nd->cost;
+        };
 
     private:
     };
@@ -29,10 +34,10 @@ public:
     Graph(int, std::pair<int, int>); // Constructor
     ~Graph();
 
-	std::vector<std::pair<bool, std::pair<int, int>>> Astar();
-    void buildGraph_Astar(std::vector< std::pair<int, int> >);
-    void generateChildren(std::vector< std::pair<int, int> >, node);
+	std::vector<std::pair<bool, std::pair<int, int>>> Astar(std::vector< std::pair<int, int> >);
+    void generateChildren(Agent*, std::vector< std::pair<int, int> >, node);
     int getDistance(std::pair<int, int>, std::pair<int, int>);
+
 };
 
 
