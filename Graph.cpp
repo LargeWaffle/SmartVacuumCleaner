@@ -53,7 +53,18 @@ int Graph::getDistance (pair<int, int> a, pair<int, int> b) {
     return diffX + diffY;
 }
 
-std::vector<std::pair<bool, std::pair<int, int>>> Graph::Astar() {
-	return std::vector<std::pair<bool, std::pair<int, int>>>();
+std::vector<std::pair<bool, std::pair<int, int>>> Graph::Astar(vector< pair<int, int> >) {
+    vector<node> opened;
+    vector<node> closed;
+
+    opened.push_back(root);
+
+    while(!opened.empty()){
+        sort(opened.begin(), opened.end());
+
+        node q =
+    }
+
+	return ;
 }
 

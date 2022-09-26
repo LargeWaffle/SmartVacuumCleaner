@@ -76,8 +76,7 @@ void Agent::getActions(Graph problem, vector<pair<int, int> > coords){
 
 	nbTargets = sens->dustyCells();  // Desires ? Function returns number of steps to take
 
-	problem.buildGraph_Astar(coords);
-	actionList = problem.Astar();
+	actionList = problem.Astar(dustCoords);
 }
 
 pair<bool, pair<int, int>> Agent::BFS() {

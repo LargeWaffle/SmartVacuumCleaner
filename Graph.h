@@ -5,7 +5,7 @@
 #include <vector>
 #include "Map.h"
 
-class Graph : public Map{
+class Graph {
 private:
     class Node{
     public:
@@ -13,7 +13,6 @@ private:
                 : location(std::move(data)){};
 
         int cost = 1;
-        float score = 0.0;
         bool actionData = false;
 		std::pair<int, int> location;
         std::vector<Node*> children;
