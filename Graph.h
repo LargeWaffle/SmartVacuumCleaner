@@ -3,7 +3,8 @@
 
 #include <utility>
 #include <vector>
-#include "Agent.h"
+#include <queue>
+#include "Map.h"
 
 class Graph {
 private:
@@ -27,17 +28,22 @@ private:
     typedef Node * node;
 
     node root;
-    int learning_rate;
 
-public:
-
-    Graph(int, std::pair<int, int>); // Constructor
+    Graph(int, std::pair<int, int>, bool, Map*); // Constructor
     ~Graph();
 
 	std::vector<std::pair<bool, std::pair<int, int>>> Astar(std::vector< std::pair<int, int> >);
     void generateChildren(Agent*, std::vector< std::pair<int, int> >, node);
     int getDistance(std::pair<int, int>, std::pair<int, int>);
 
+    //void expandBFSNode(std::pair<int, int> pos, std::queue< std::pair<int, int>>&, std::vector< std::pair<int, int>>&);
+    void expandNode(node, std::vector<node>&, std::queue<node>* = new std::queue<node> ());
+
+    bool isNodeUnvisited(std::pair<int, int>, std::vector<node>&);
+    void buildNode(std::pair<int, int>, node, std::vector<node>&, std::queue<node>* = new std::queue<node> ());
+
+    bool betterNode(node, std::vector<node> &);
+    node getBetterNode(node, std::vector<node> &);
 };
 
 

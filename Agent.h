@@ -16,10 +16,7 @@ public:
 	~Agent();
 
 	void agentWork();
-	std::pair<bool, std::pair<int, int>> BFS ();
-	void expandNode(std::pair<int, int> pos, std::queue< std::pair<int, int>>&, std::vector< std::pair<int, int>>&);
-	bool isNodeUnvisited(std::pair<int, int> , std::vector< std::pair<int, int>>&);
-	void getActions(Graph, std::vector<std::pair<int, int> > );
+    std::vector<Graph::node> getActions();
 
 	Sensor * sens;
 	Effector * eff;
@@ -31,9 +28,8 @@ private:
 
 	float score = 0.0;
 
-	// serie d'etat/etat a atteindre
 	Map * map;
-	bool smartAgent;
+    Graph * problem;
 };
 
 

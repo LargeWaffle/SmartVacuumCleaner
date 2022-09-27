@@ -14,10 +14,14 @@ Effector::~Effector() {
 
 void Effector::actOnCell(bool targetAction) {
 
-	if (targetAction)
-		map->pickup();
+	if (targetAction){
 
-	map->clean();
+        if (map->getCell(map->getVacuum().first, map->getVacuum().second)->hasJewel())
+		    map->pickup();
+
+        if (map->getCell(map->getVacuum().first, map->getVacuum().second)->hasDust())
+            map->clean();
+    }
 }
 
 int Effector::travelCost(int destX, int destY) {
