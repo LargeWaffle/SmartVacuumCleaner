@@ -10,30 +10,40 @@ class Graph {
 private:
     class Node{
     public:
-        Node(std::pair<int, int> data, std::vector<Node*> child_list = {})
-                : location(std::move(data)){};
+        Node(std::pair<int, int> data, int targs = -1, std::vector<Node*> child_list = {})
+                : location(std::move(data)), nbtargs(targs) {};
 
         int cost = 1;
         bool actionData = false;
+        int nbtargs;
+        Node* parent = nullptr;
+
+        int g = 0;
+        int h = 0;
+        int f = 0;
 
 		std::pair<int, int> location;
         std::vector<Node*> children;
 
-        bool operator<(const node& nd) const{
-            return cost < nd->cost;
+        bool operator<(const Node& nd) const{
+            return cost < nd.cost;
         };
-
-    private:
     };
-    typedef Node * node;
 
+    int learning_rate;
+    bool algorithm;
+    Map * map;
+
+public:
+    typedef Node * node;
     node root;
 
     Graph(int, std::pair<int, int>, bool, Map*); // Constructor
     ~Graph();
 
-	std::vector<std::pair<bool, std::pair<int, int>>> Astar(std::vector< std::pair<int, int> >);
-    void generateChildren(Agent*, std::vector< std::pair<int, int> >, node);
+	std::vector<node> Astar(int);
+    std::vector<node> BFS ();
+
     int getDistance(std::pair<int, int>, std::pair<int, int>);
 
     //void expandBFSNode(std::pair<int, int> pos, std::queue< std::pair<int, int>>&, std::vector< std::pair<int, int>>&);

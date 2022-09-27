@@ -21,8 +21,9 @@ public:
 	Sensor * sens;
 	Effector * eff;
 
-	int nbTargets;  // Desires
-	std::vector< std::pair<bool, std::pair<int, int>> > actionList;    // Intentions
+	bool smartAgent;
+	int nbtargets;  // Desires
+	std::vector<Graph::node> actionList;    // Intentions
 
 private:
 

@@ -1,37 +1,62 @@
 #include "Graph.h"
 #include <cmath>
-#include <iostream>
 #include <algorithm>
 
 using namespace std;
 
-Graph::Graph(int lr, pair<int, int> vacPos)
-{
+Graph::Graph(int lr, pair<int, int> vacPos, bool algo, Map* mp) {
     learning_rate = lr;
     root = new Node(vacPos);
     algorithm = algo;
     map = mp;
 }
 
-Graph::~Graph()
-{
+Graph::~Graph() {
 
 }
 
-int Graph::getDistance (pair<int, int> a, pair<int, int> b) {
+int Graph::getDistance(pair<int, int> a, pair<int, int> b) {
 
     int diffX = abs(a.first - b.first);
     int diffY = abs(a.second - b.second);
     return diffX + diffY;
 }
 
-std::vector<std::pair<bool, std::pair<int, int>>> Graph::Astar(vector< pair<int, int> >) {
+vector<Graph::node> Graph::BFS() {
+
+    vector<node> visited;
+    queue<node> qu;
+
+    qu.push(root);
+
+    while (!qu.empty()) {
+        node node = qu.front();
+        qu.pop();
+
+        if (map->getCell(node->location.first, node->location.second)->hasDust()) {
+
+            vector<Graph::node> solution;
+            while (node->parent != nullptr) {
+                solution.push_back(node);
+                node = node->parent;
+            }
+            return solution;
+
+        } else {
+            visited.push_back(node);
+            expandNode( node, visited, &qu);
+        }
+    }
+}
+
+vector<Graph::node> Graph::Astar(int nbtargets) {
     vector<node> opened;
     vector<node> closed;
 
+    root->nbtargs = nbtargets;
     opened.push_back(root);
 
-    while(!opened.empty()){
+    while (!opened.empty()) {
         sort(opened.begin(), opened.end());
 
         node q = opened.front();

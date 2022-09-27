@@ -1,6 +1,6 @@
 #include "Agent.h"
+
 #include <random>
-#include <queue>
 
 using namespace std;
 
@@ -17,7 +17,7 @@ Agent::Agent(Map *mp, bool smart) {
 	eff = new Effector(mp);
 	sens = new Sensor(mp);
 
-	nbTargets = 0;
+	nbtargets = 0;
 	actionList = {};
 }
 
@@ -57,7 +57,10 @@ void Agent::agentWork() {
 
 vector<Graph::node> Agent::getActions(){
 
-	nbTargets = sens->dustyCells();  // Desires ? Function returns number of steps to take
+	nbtargets = sens->dustyCells();  // Desires ? Function returns number of steps to take
 
-	actionList = problem.Astar(dustCoords);
+    if(smartAgent)
+	    return problem->Astar(nbtargets);
+    else
+        return problem->BFS();
 }
