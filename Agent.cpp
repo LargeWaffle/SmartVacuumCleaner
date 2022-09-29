@@ -41,9 +41,6 @@ void Agent::agentWork() {
         if (actionList.empty())
             actionList = getActions();
 
-        if (cpt > 20000)
-            cout << "hehe";
-
         bool targetAction = actionList.back()->actionData;
         pair<int, int> targetLocation = actionList.back()->location;
 
@@ -62,7 +59,7 @@ void Agent::agentWork() {
 
 vector<Graph::node> Agent::getActions() {
 
-    nbtargets = sens->dustyCells();  // Desires ? Function returns number of steps to take
+    nbtargets = sens->getDustCoords().size();  // Desires ? Function returns number of steps to take
 
     if (smartAgent)
         return problem->Astar(sens->locateAgent(), nbtargets);

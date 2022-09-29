@@ -58,6 +58,7 @@ vector<Graph::node> Graph::BFS(pair<int, int> vacPos) {
 vector<Graph::node> Graph::Astar(pair<int, int> vacPos, int nbtargets) {
     vector<node> opened;
     vector<node> closed;
+	vector<node> solution;
     node root = new Node(vacPos);
 
     root->nbtargs = nbtargets;
@@ -69,7 +70,6 @@ vector<Graph::node> Graph::Astar(pair<int, int> vacPos, int nbtargets) {
         node q = opened.front();
 
         if (q->nbtargs == 0) { // we are in a solution node
-            vector<node> solution;
 
             while (q->parent != nullptr) {
                 solution.push_back(q);
@@ -88,7 +88,8 @@ vector<Graph::node> Graph::Astar(pair<int, int> vacPos, int nbtargets) {
                 continue;
             else {
                 child->g = q->g + getDistance(child->location, q->location);
-                child->h = child->f = child->g + child->h;
+                child->h = q->nbtargs;
+				child->f = child->g + child->h;
             }
 
             if (betterNode(child, opened))
@@ -96,7 +97,7 @@ vector<Graph::node> Graph::Astar(pair<int, int> vacPos, int nbtargets) {
 
             if (betterNode(child, closed))
                 continue;
-            else
+            else if(getBetterNode(child, closed) != nullptr)
                 opened.push_back(getBetterNode(child, closed));
         }
 
