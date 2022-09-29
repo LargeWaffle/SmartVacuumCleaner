@@ -30,21 +30,24 @@ Agent::~Agent() {
 
 void Agent::agentWork() {
 
-    pair<int, int> agentLocation = sens->locateAgent();
-    problem = new Graph(LEARNING_RATE, agentLocation, smartAgent, map);
+    problem = new Graph(LEARNING_RATE, sens->locateAgent(), smartAgent, map);
 
-
+    int cpt = 0;
 	while (true) {
+        cpt++;
 
         //for (int i = 0; i < LEARNING_RATE; i++) {
 
         if (actionList.empty())
             actionList = getActions();
 
-        bool targetAction = actionList.front()->actionData;
-        pair<int, int> targetLocation = actionList.front()->location;
+        if (actionList.empty())
+            cout << "hello" << endl;
 
-        if (agentLocation != targetLocation)
+        bool targetAction = actionList.back()->actionData;
+        pair<int, int> targetLocation = actionList.back()->location;
+
+        if (sens->locateAgent() != targetLocation)
             eff->travel(targetLocation.first, targetLocation.second);
 
         eff->actOnCell(targetAction);
@@ -52,6 +55,7 @@ void Agent::agentWork() {
         actionList.erase(actionList.begin());
 
         cout << *map << endl;
+        cout << cpt << endl;
 	}
 }
 
@@ -60,7 +64,7 @@ vector<Graph::node> Agent::getActions(){
 	nbtargets = sens->dustyCells();  // Desires ? Function returns number of steps to take
 
     if(smartAgent)
-	    return problem->Astar(nbtargets);
+	    return problem->Astar(sens->locateAgent(), nbtargets);
     else
-        return problem->BFS();
+        return problem->BFS(sens->locateAgent());
 }

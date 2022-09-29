@@ -6,7 +6,7 @@ using namespace std;
 
 Graph::Graph(int lr, pair<int, int> vacPos, bool algo, Map* mp) {
     learning_rate = lr;
-    root = new Node(vacPos);
+    //root = new Node(vacPos);
     algorithm = algo;
     map = mp;
 }
@@ -22,9 +22,11 @@ int Graph::getDistance(pair<int, int> a, pair<int, int> b) {
     return diffX + diffY;
 }
 
-vector<Graph::node> Graph::BFS() {
+vector<Graph::node> Graph::BFS(pair<int, int> vacPos) {
 
+    node root = new Node(vacPos);
     vector<node> visited;
+    vector<node> solution;
     queue<node> qu;
 
     qu.push(root);
@@ -35,23 +37,26 @@ vector<Graph::node> Graph::BFS() {
 
         if (map->getCell(node->location.first, node->location.second)->hasDust()) {
 
-            vector<Graph::node> solution;
-            while (node->parent != nullptr) {
-                solution.push_back(node);
-                node = node->parent;
+            solution.clear();
+            while (nd.parent != nullptr) {
+                solution.push_back(&nd);
+                nd = *nd.parent;
             }
             return solution;
 
         } else {
-            visited.push_back(node);
-            expandNode( node, visited, &qu);
+            visited.push_back(&nd);
+            expandNode(&nd, visited, &qu);
         }
     }
+    solution.push_back(root);
+    return solution;
 }
 
-vector<Graph::node> Graph::Astar(int nbtargets) {
+vector<Graph::node> Graph::Astar(pair<int, int> vacPos, int nbtargets) {
     vector<node> opened;
     vector<node> closed;
+    node root = new Node(vacPos);
 
     root->nbtargs = nbtargets;
     opened.push_back(root);
@@ -118,6 +123,28 @@ void Graph::expandNode(node node, vector<Graph::node> &opened, queue<Graph::node
 
 }
 
+void Graph::buildNode(pair<int, int> loc, node parentNode, vector<Graph::node> &opened, queue<Graph::node> *queue) {
+
+    node newNode = new Node(loc);
+
+    newNode->actionData = map->getCell(loc.first, loc.second)->hasDust();
+
+    if (parentNode->nbtargs > 0 && algorithm)
+        newNode->nbtargs = parentNode->nbtargs - newNode->actionData;
+
+    if (!newNode->actionData)
+        newNode->actionData = map->getCell(loc.first, loc.second)->hasJewel();
+
+    parentNode->children.push_back(newNode);
+    newNode->parent = parentNode;
+
+    if (algorithm)
+        opened.push_back(newNode);
+    else
+        queue->push(newNode);
+}
+
+
 bool Graph::isNodeUnvisited(pair<int, int> pos, vector<Graph::node> &opened) {
 
     for (auto elem: opened)
@@ -145,24 +172,3 @@ Graph::node Graph::getBetterNode(node child, vector<Graph::node> &list) {
     return nullptr;
 }
 
-void Graph::buildNode(pair<int, int> loc, node parentNode, vector<Graph::node> &opened, queue<Graph::node> *queue) {
-
-    node newNode = new Node(loc);
-
-    bool dust_cond = map->getCell(loc.first, loc.second)->hasDust();
-
-    newNode->actionData = dust_cond;
-    if (dust_cond && newNode->nbtargs > 0)
-        newNode->nbtargs -= 1;
-
-    if (!newNode->actionData)
-        newNode->actionData = map->getCell(loc.first, loc.second)->hasJewel();
-
-    parentNode->children.push_back(newNode);
-    newNode->parent = parentNode;
-
-    if (algorithm)
-        opened.push_back(newNode);
-    else
-        queue->push(newNode);
-}

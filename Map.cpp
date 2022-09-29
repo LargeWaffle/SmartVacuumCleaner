@@ -16,6 +16,7 @@ Map::Map()
 			v.push_back(new Cell(INITIAL_DUST_SPAWN_RATE, INITIAL_JEWEL_SPAWN_RATE));
 		map.push_back(v);
 	}
+    //cout << "\nProcess finished with exit code -1073741819 (0xC0000005)\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n" << endl;
 }
 
 // Destructor
@@ -64,6 +65,7 @@ pair<int, int> Map::getVacuum() {
 		for (int j = 0; j < MAP_SIZE; j++)
 			if(map[i][j]->hasVacuum())
 				return make_pair(i,j);
+    return make_pair(0,0);
 }
 
 ostream &operator<<(ostream & output, const Map& mp) {

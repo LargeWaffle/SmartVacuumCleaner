@@ -36,13 +36,13 @@ private:
 
 public:
     typedef Node * node;
-    node root;
+    //node root;
 
     Graph(int, std::pair<int, int>, bool, Map*); // Constructor
     ~Graph();
 
-	std::vector<node> Astar(int);
-    std::vector<node> BFS ();
+	std::vector<node> Astar(std::pair<int, int>, int);
+    std::vector<node> BFS (std::pair<int, int>);
 
     int getDistance(std::pair<int, int>, std::pair<int, int>);
 
