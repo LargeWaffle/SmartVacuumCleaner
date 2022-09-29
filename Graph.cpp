@@ -36,18 +36,13 @@ vector<Graph::node> Graph::BFS(pair<int, int> vacPos) {
         qu.pop();
 
         if (map->getCell(node->location.first, node->location.second)->hasDust()) {
+            node->actionData = true; // hotfix
 
-            solution.clear();
-            if (node == root || map->getCell(root->location.first, root->location.second)->hasDust()) {
-                node->actionData = true; // hotfix
-                solution.push_back(node);
-                return solution;
-            }
-
-            while (node->parent != nullptr) {
+            do {
                 solution.push_back(node);
                 node = node->parent;
-            }
+            } while (node != nullptr);
+
             return solution;
 
         } else {
@@ -55,8 +50,9 @@ vector<Graph::node> Graph::BFS(pair<int, int> vacPos) {
             expandNode(node, visited, &qu);
         }
     }
+
     solution.push_back(root);
-    return solution;
+	return solution;
 }
 
 vector<Graph::node> Graph::Astar(pair<int, int> vacPos, int nbtargets) {
