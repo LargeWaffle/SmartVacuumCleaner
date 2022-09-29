@@ -61,49 +61,55 @@ vector<Graph::node> Graph::Astar(pair<int, int> vacPos, int nbtargets) {
 	vector<node> solution;
     node root = new Node(vacPos);
 
-    root->nbtargs = nbtargets;
-    opened.push_back(root);
+	if (nbtargets != 0)
+	{
+		root->nbtargs = nbtargets;
+		opened.push_back(root);
 
-    while (!opened.empty()) {
-        sort(opened.begin(), opened.end());
+		while (!opened.empty()) {
+			sort(opened.begin(), opened.end());
 
-        node q = opened.front();
+			node q = opened.front();
 
-        if (q->nbtargs == 0) { // we are in a solution node
+			if (q->nbtargs == 0) { // we are in a solution node
 
-            while (q->parent != nullptr) {
-                solution.push_back(q);
-                q = q->parent;
-            }
-            return solution;
-        }
+				while (q->parent != nullptr) {
+					solution.push_back(q);
+					q = q->parent;
+				}
+				return solution;
+			}
 
-        opened.erase(opened.begin());
+			opened.erase(opened.begin());
 
-        expandNode( q, opened);
+			expandNode( q, opened);
 
-        for (auto child: q->children) {
+			for (auto child: q->children) {
 
-            if (child->nbtargs == 0)
-                continue;
-            else {
-                child->g = q->g + getDistance(child->location, q->location);
-                child->h = q->nbtargs;
-				child->f = child->g + child->h;
-            }
+				if (child->nbtargs == 0)
+					continue;
+				else {
+					child->g = q->g + getDistance(child->location, q->location);
+					child->h = root->nbtargs - child->nbtargs < 0 ? 0 : root->nbtargs - child->nbtargs;
+					child->f = child->g + child->h;
+				}
 
-            if (betterNode(child, opened))
-                continue;
+				if (betterNode(child, opened))
+					continue;
 
-            if (betterNode(child, closed))
-                continue;
-            else if(getBetterNode(child, closed) != nullptr)
-                opened.push_back(getBetterNode(child, closed));
-        }
+				if (betterNode(child, closed))
+					continue;
+				else if(getBetterNode(child, closed) != nullptr)
+					opened.push_back(getBetterNode(child, closed));
+			}
 
-        closed.push_back(q);
+			closed.push_back(q);
 
-    }
+		}
+	}else{
+		solution.push_back(root);
+		return solution;
+	}
 }
 
 void Graph::expandNode(node node, vector<Graph::node> &opened, queue<Graph::node> *queue) {
