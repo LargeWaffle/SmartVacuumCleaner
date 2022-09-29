@@ -52,7 +52,7 @@ void Agent::agentWork() {
 
         eff->actOnCell(targetAction);
 
-        actionList.erase(actionList.begin());
+        actionList.pop_back();
 
         cout << *map << endl;
         cout << cpt << endl;

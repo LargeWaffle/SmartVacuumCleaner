@@ -25,6 +25,22 @@ private:
 		std::pair<int, int> location;
         std::vector<Node*> children;
 
+        Node& operator=(const Node& old_node){
+
+            location = old_node.location;
+            nbtargs = old_node.nbtargs;
+            children = old_node.children;
+            parent = old_node.parent;
+            actionData = old_node.actionData;
+            cost = old_node.cost;
+
+            g = old_node.g;
+            h = old_node.h;
+            f = old_node.f;
+
+            return *this;
+        }
+
         bool operator<(const Node& nd) const{
             return cost < nd.cost;
         };

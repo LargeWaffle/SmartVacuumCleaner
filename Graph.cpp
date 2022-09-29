@@ -32,10 +32,10 @@ vector<Graph::node> Graph::BFS(pair<int, int> vacPos) {
     qu.push(root);
 
     while (!qu.empty()) {
-        node node = qu.front();
+        Node nd = *qu.front();
         qu.pop();
 
-        if (map->getCell(node->location.first, node->location.second)->hasDust()) {
+        if (map->getCell(nd.location.first, nd.location.second)->hasDust()) {
 
             solution.clear();
             while (nd.parent != nullptr) {
@@ -86,9 +86,7 @@ vector<Graph::node> Graph::Astar(pair<int, int> vacPos, int nbtargets) {
                 continue;
             else {
                 child->g = q->g + getDistance(child->location, q->location);
-                child->h =
-
-                child->f = child->g + child->h;
+                child->h = child->f = child->g + child->h;
             }
 
             if (betterNode(child, opened))
