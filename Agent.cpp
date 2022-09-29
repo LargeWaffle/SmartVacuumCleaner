@@ -41,7 +41,7 @@ void Agent::agentWork() {
         if (actionList.empty())
             actionList = getActions();
 
-        if (cpt > 40000)
+        if (cpt > 20000)
             cout << "hehe";
 
         bool targetAction = actionList.back()->actionData;

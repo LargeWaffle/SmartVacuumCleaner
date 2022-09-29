@@ -38,8 +38,11 @@ vector<Graph::node> Graph::BFS(pair<int, int> vacPos) {
         if (map->getCell(node->location.first, node->location.second)->hasDust()) {
 
             solution.clear();
-            if (node == root)
+            if (node == root || map->getCell(root->location.first, root->location.second)->hasDust()) {
+                node->actionData = true; // hotfix
                 solution.push_back(node);
+                return solution;
+            }
 
             while (node->parent != nullptr) {
                 solution.push_back(node);
