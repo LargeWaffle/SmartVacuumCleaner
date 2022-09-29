@@ -6,25 +6,25 @@ using namespace std;
 
 Agent::Agent(Map *mp, bool smart) {
 
-	map = mp;
-	smartAgent = smart;
+    map = mp;
+    smartAgent = smart;
 
-	int coordX = rand() % mp->getMapSize();
-	int coordY = rand() % mp->getMapSize();
+    int coordX = rand() % mp->getMapSize();
+    int coordY = rand() % mp->getMapSize();
 
-	map->getCell(coordX, coordY)->setVacuum(true);
+    map->getCell(coordX, coordY)->setVacuum(true);
 
-	eff = new Effector(mp);
-	sens = new Sensor(mp);
+    eff = new Effector(mp);
+    sens = new Sensor(mp);
 
-	nbtargets = 0;
-	actionList = {};
+    nbtargets = 0;
+    actionList = {};
 }
 
 Agent::~Agent() {
 
-	delete eff;
-	delete sens;
+    delete eff;
+    delete sens;
 
 }
 
@@ -33,7 +33,7 @@ void Agent::agentWork() {
     problem = new Graph(LEARNING_RATE, sens->locateAgent(), smartAgent, map);
 
     int cpt = 0;
-	while (true) {
+    while (true) {
         cpt++;
 
         //for (int i = 0; i < LEARNING_RATE; i++) {
@@ -41,8 +41,8 @@ void Agent::agentWork() {
         if (actionList.empty())
             actionList = getActions();
 
-        if (actionList.empty())
-            cout << "hello" << endl;
+        if (cpt > 40000)
+            cout << "hehe";
 
         bool targetAction = actionList.back()->actionData;
         pair<int, int> targetLocation = actionList.back()->location;
@@ -54,17 +54,18 @@ void Agent::agentWork() {
 
         actionList.pop_back();
 
-        cout << *map << endl;
         cout << cpt << endl;
-	}
+        cout << *map << endl;
+    }
+
 }
 
-vector<Graph::node> Agent::getActions(){
+vector<Graph::node> Agent::getActions() {
 
-	nbtargets = sens->dustyCells();  // Desires ? Function returns number of steps to take
+    nbtargets = sens->dustyCells();  // Desires ? Function returns number of steps to take
 
-    if(smartAgent)
-	    return problem->Astar(sens->locateAgent(), nbtargets);
+    if (smartAgent)
+        return problem->Astar(sens->locateAgent(), nbtargets);
     else
         return problem->BFS(sens->locateAgent());
 }

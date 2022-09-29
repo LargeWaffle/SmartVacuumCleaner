@@ -32,21 +32,24 @@ vector<Graph::node> Graph::BFS(pair<int, int> vacPos) {
     qu.push(root);
 
     while (!qu.empty()) {
-        Node nd = *qu.front();
+        node node = qu.front();
         qu.pop();
 
-        if (map->getCell(nd.location.first, nd.location.second)->hasDust()) {
+        if (map->getCell(node->location.first, node->location.second)->hasDust()) {
 
             solution.clear();
-            while (nd.parent != nullptr) {
-                solution.push_back(&nd);
-                nd = *nd.parent;
+            if (node == root)
+                solution.push_back(node);
+
+            while (node->parent != nullptr) {
+                solution.push_back(node);
+                node = node->parent;
             }
             return solution;
 
         } else {
-            visited.push_back(&nd);
-            expandNode(&nd, visited, &qu);
+            visited.push_back(node);
+            expandNode(node, visited, &qu);
         }
     }
     solution.push_back(root);
