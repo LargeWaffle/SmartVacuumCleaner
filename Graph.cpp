@@ -58,18 +58,23 @@ vector<Graph::node> Graph::BFS(pair<int, int> vacPos) {
 vector<Graph::node> Graph::Astar(pair<int, int> vacPos, int nbtargets) {
     vector<node> opened;
     vector<node> closed;
+    vector<node> solution;
     node root = new Node(vacPos);
 
     root->nbtargs = nbtargets;
     opened.push_back(root);
+
+    if (map->getCell(root->location.first, root->location.second)->hasDust())
+        cout << "hehe";
 
     while (!opened.empty()) {
         sort(opened.begin(), opened.end());
 
         node q = opened.front();
 
-        if (q->nbtargs == 0) { // we are in a solution node
-            vector<node> solution;
+        if (q->nbtargs == 0) { // either we are in a solution node, or there is no dust
+            if (q == root)
+                solution.push_back(root);
 
             while (q->parent != nullptr) {
                 solution.push_back(q);
@@ -88,7 +93,8 @@ vector<Graph::node> Graph::Astar(pair<int, int> vacPos, int nbtargets) {
                 continue;
             else {
                 child->g = q->g + getDistance(child->location, q->location);
-                child->h = child->f = child->g + child->h;
+                child->h = 0;
+                child->f = child->g + child->h;
             }
 
             if (betterNode(child, opened))
@@ -96,12 +102,10 @@ vector<Graph::node> Graph::Astar(pair<int, int> vacPos, int nbtargets) {
 
             if (betterNode(child, closed))
                 continue;
-            else
+            else if (getBetterNode(child, closed) != nullptr)
                 opened.push_back(getBetterNode(child, closed));
         }
-
         closed.push_back(q);
-
     }
 }
 

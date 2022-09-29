@@ -35,14 +35,13 @@ void Agent::agentWork() {
     int cpt = 0;
     while (true) {
         cpt++;
-
         //for (int i = 0; i < LEARNING_RATE; i++) {
+
+        cout << cpt << endl;
+        cout << *map << endl;
 
         if (actionList.empty())
             actionList = getActions();
-
-        if (cpt > 20000)
-            cout << "hehe";
 
         bool targetAction = actionList.back()->actionData;
         pair<int, int> targetLocation = actionList.back()->location;
@@ -53,16 +52,13 @@ void Agent::agentWork() {
         eff->actOnCell(targetAction);
 
         actionList.pop_back();
-
-        cout << cpt << endl;
-        cout << *map << endl;
     }
 
 }
 
 vector<Graph::node> Agent::getActions() {
 
-    nbtargets = sens->dustyCells();  // Desires ? Function returns number of steps to take
+    nbtargets = sens->getDustCoords().size();  // Desires ? Function returns number of steps to take
 
     if (smartAgent)
         return problem->Astar(sens->locateAgent(), nbtargets);
