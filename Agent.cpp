@@ -36,6 +36,8 @@ void Agent::agentWork() {
     while (true) {
         cpt++;
 
+		if(cpt > 5)
+			cout << "hello" << endl;
         //for (int i = 0; i < LEARNING_RATE; i++) {
 
         if (actionList.empty())

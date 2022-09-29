@@ -90,7 +90,7 @@ vector<Graph::node> Graph::Astar(pair<int, int> vacPos, int nbtargets) {
 					continue;
 				else {
 					child->g = q->g + getDistance(child->location, q->location);
-					child->h = root->nbtargs - child->nbtargs < 0 ? 0 : root->nbtargs - child->nbtargs;
+					child->h = abs(root->nbtargs - child->nbtargs);
 					child->f = child->g + child->h;
 				}
 
