@@ -7,7 +7,7 @@
 #include "Sensor.h"
 #include "Graph.h"
 
-#define LEARNING_RATE 4
+#define LEARNING_RATE 16
 
 class Agent {
 
@@ -22,7 +22,6 @@ public:
 	Effector * eff;
 
 	bool smartAgent;
-	int nbtargets;  // Desires
 	std::vector<Graph::node> actionList;    // Intentions
 
 private:

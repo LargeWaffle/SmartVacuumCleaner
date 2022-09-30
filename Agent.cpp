@@ -7,66 +7,65 @@ using namespace std;
 
 Agent::Agent(Map *mp, bool smart) {
 
-    map = mp;
-    smartAgent = smart;
+	map = mp;
+	smartAgent = smart;
 
-    int coordX = rand() % mp->getMapSize();
-    int coordY = rand() % mp->getMapSize();
+	int coordX = rand() % mp->getMapSize();
+	int coordY = rand() % mp->getMapSize();
 
-    map->getCell(coordX, coordY)->setVacuum(true);
+	map->getCell(coordX, coordY)->setVacuum(true);
 
-    eff = new Effector(mp);
-    sens = new Sensor(mp);
+	eff = new Effector(mp);
+	sens = new Sensor(mp);
 
-    nbtargets = 0;
-    actionList = {};
+	actionList = {};
 }
 
 Agent::~Agent() {
 
-    delete eff;
-    delete sens;
+	delete eff;
+	delete sens;
 
 }
 
 void Agent::agentWork() {
 
-    problem = new Graph(LEARNING_RATE, sens->locateAgent(), map);
+	int stepNumber = 0;
+	problem = new Graph(LEARNING_RATE, sens->locateAgent(), map);
 
-    int cpt = 0;
-    while (true) {
-        cpt++;
-        //for (int i = 0; i < LEARNING_RATE; i++) {
+	while (true) {
 
-	    cout << cpt << endl;
-	    cout << *map << endl;
+		cout << stepNumber << endl;
+		cout << *map << endl;
 
-        if (actionList.empty()) {
-	        actionList = getActions();
-	        this_thread::sleep_for(chrono::milliseconds (1));
+		if (actionList.empty() || stepNumber >= LEARNING_RATE) {
+			if (stepNumber >= LEARNING_RATE)
+				stepNumber = 0;
+			actionList = getActions();
+			this_thread::sleep_for(chrono::milliseconds(1));
 		}
 
 
-        int targetAction = actionList.back()->actionData;
-        pair<int, int> targetLocation = actionList.back()->location;
+		int targetAction = actionList.back()->actionData;
+		pair<int, int> targetLocation = actionList.back()->location;
 
-        if (sens->locateAgent() != targetLocation)
-            eff->travel(targetLocation.first, targetLocation.second);
+		if (sens->locateAgent() != targetLocation) {
+			eff->travel(targetLocation.first, targetLocation.second);
+			stepNumber++;
+		}
 
-        eff->actOnCell(targetAction);
+		stepNumber += eff->actOnCell(targetAction, LEARNING_RATE - stepNumber);
 
-        actionList.pop_back();
+		actionList.pop_back();
 
-    }
+	}
 
 }
 
 vector<Graph::node> Agent::getActions() {
 
-    nbtargets = sens->getDustCoords().size();  // Desires ? Function returns number of steps to take
-
-    if (smartAgent)
-        return problem->Astar(sens->locateAgent());
-    else
-        return problem->BFS(sens->locateAgent());
+	if (smartAgent)
+		return problem->Astar(sens->locateAgent());
+	else
+		return problem->BFS(sens->locateAgent());
 }

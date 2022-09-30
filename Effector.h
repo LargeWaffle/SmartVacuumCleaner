@@ -9,9 +9,8 @@ public:
 	Effector(Map*);
 	~Effector();
 
-	int travelCost(int, int);
 	void travel(int, int);
-	void actOnCell(int);
+	int actOnCell(int, int);
 private:
 	Map * map;
 };

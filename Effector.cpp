@@ -12,21 +12,29 @@ Effector::~Effector() {
 
 }
 
-void Effector::actOnCell(int targetAction) {
-	if (targetAction == 1)
-        map->pickup();
-    else if (targetAction == 2)
-        map->clean();
-    else if (targetAction == 3) {
-        map->pickup();
-        map->clean();
-    }
-}
+int Effector::actOnCell(int targetAction, int actionCredit) {
+	int res = 0;
 
-int Effector::travelCost(int destX, int destY) {
-	int x = abs(map->getVacuum().first - destX);
-	int y = abs(map->getVacuum().second - destY);
-	return x + y;
+	if (targetAction == 1 && actionCredit >= 1) {
+		map->pickup();
+		res = 1;
+	} else if (targetAction == 2 && actionCredit >= 1) {
+		map->clean();
+		res = 1;
+	} else if (targetAction == 3) {
+
+		if (actionCredit >= 1) {
+			map->pickup();
+			res += 1;
+			actionCredit--;
+		}
+
+		if (actionCredit >= 1) {
+			map->clean();
+			res += 1;
+		}
+	}
+	return res;
 }
 
 void Effector::travel(int destX, int destY) {
