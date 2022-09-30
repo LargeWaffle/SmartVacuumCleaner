@@ -1,6 +1,7 @@
 #include "Agent.h"
 
 #include <random>
+#include <thread>
 
 using namespace std;
 
@@ -30,7 +31,7 @@ Agent::~Agent() {
 
 void Agent::agentWork() {
 
-    problem = new Graph(LEARNING_RATE, sens->locateAgent(), smartAgent, map);
+    problem = new Graph(LEARNING_RATE, sens->locateAgent(), map);
 
     int cpt = 0;
     while (true) {
@@ -40,8 +41,10 @@ void Agent::agentWork() {
 	    cout << cpt << endl;
 	    cout << *map << endl;
 
-        if (actionList.empty())
-             actionList = getActions();
+        if (actionList.empty()) {
+	        actionList = getActions();
+	        this_thread::sleep_for(chrono::milliseconds (1));
+		}
 
 
         int targetAction = actionList.back()->actionData;

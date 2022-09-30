@@ -47,14 +47,13 @@ private:
     };
 
     int learning_rate;
-    bool algorithm;
     Map * map;
 
 public:
     typedef Node * node;
     //node root;
 
-    Graph(int, std::pair<int, int>, bool, Map*); // Constructor
+    Graph(int, std::pair<int, int>, Map*); // Constructor
     ~Graph();
 
 	std::vector<node> Astar(std::pair<int, int>);
@@ -68,10 +67,10 @@ public:
 
 	void buildNode(std::pair<int, int>, node);
 
-	int getAreaScore(std::pair<int, int>);
+	std::vector<std::vector<int>> generateScores(int&);
 
-    bool betterNode(node, std::vector<node> &);
-    node getBetterNode(node, std::vector<node> &);
+	bool betterNode(node, std::vector<node> &);
+	int cellScore(std::pair<int, int> loc);
 };
 
 

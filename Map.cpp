@@ -3,6 +3,7 @@
 #include <thread>
 #include <chrono>
 #include <random>
+#include <unistd.h>
 
 using namespace std;
 
@@ -45,7 +46,7 @@ void Map::mapUpdator(){
 
 void Map::objSpawn(){
 	while(true) {
-        this_thread::sleep_for(chrono::milliseconds(5));
+		this_thread::sleep_for(chrono::milliseconds (1));
 	    mapUpdator();
 	}
 }

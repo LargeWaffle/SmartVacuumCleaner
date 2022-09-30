@@ -4,10 +4,9 @@
 
 using namespace std;
 
-Graph::Graph(int lr, pair<int, int> vacPos, bool algo, Map *mp) {
+Graph::Graph(int lr, pair<int, int> vacPos, Map *mp) {
 	learning_rate = lr;
 	//root = new Node(vacPos);
-	algorithm = algo;
 	map = mp;
 }
 
@@ -46,7 +45,7 @@ vector<Graph::node> Graph::BFS(pair<int, int> vacPos) {
 			do {
 				solution.push_back(current);
                 current = current->parent;
-			} while (current != nullptr);
+			} while (current->parent != nullptr);
 
 			return solution;
 
@@ -70,6 +69,8 @@ vector<Graph::node> Graph::Astar(pair<int, int> vacPos) {
 	vector<node> solution;
 	node root = new Node(vacPos);
 
+	int maxScore = 0;
+	vector<vector<int>> scoreTab = generateScores(maxScore);
 	opened.push_back(root);
 
 	while (!opened.empty()) {
@@ -107,7 +108,9 @@ vector<Graph::node> Graph::Astar(pair<int, int> vacPos) {
 		for (auto child: current->children) {
 
 			child->g = current->g + getDistance(child->location, current->location);
-			child->h = getAreaScore(current->location);
+
+			child->h = maxScore - scoreTab[child->location.first][child->location.second];
+
 			child->f = child->g + child->h;
 
 			if (betterNode(child, opened))
@@ -174,25 +177,28 @@ bool Graph::betterNode(node child, vector<Graph::node> &list) {
 	return false;
 }
 
-Graph::node Graph::getBetterNode(node child, vector<Graph::node> &list) {
+vector<vector<int>> Graph::generateScores(int &maxScore) {
 
-	for (auto elem: list)
-		if (elem->location == child->location && elem->g < child->g)
-			return elem;
+	vector<vector<int>> tab(MAP_SIZE, vector<int>(MAP_SIZE));
 
-	return nullptr;
+	for (int i = 0; i < MAP_SIZE; i++)
+		for (int j = 0; j < MAP_SIZE; j++) {
+			tab[i][j] = cellScore(make_pair(i,j));
+			if (tab[i][j] > maxScore)
+				maxScore = tab[i][j];
+		}
+
+	return tab;
 }
 
-
-
-int Graph::getAreaScore(pair<int, int> loc) {
+int Graph::cellScore(pair<int, int> loc) {
 	int score = 0;
 
 	for (int i = 0; i < MAP_SIZE; i++)
 		for (int j = 0; j < MAP_SIZE; j++)
+			if (getDistance(loc, make_pair(i,j)) < 3)
 				if (map->getCell(i,j)->hasDust())
-					if (getDistance(loc, make_pair(i,j)) < MAP_SIZE)
-						score += (getDistance(loc, make_pair(i,j)) - MAP_SIZE);
+					score += 1;
 
 	return score;
 }
