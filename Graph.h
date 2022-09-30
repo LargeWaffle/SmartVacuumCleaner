@@ -57,16 +57,20 @@ public:
     Graph(int, std::pair<int, int>, bool, Map*); // Constructor
     ~Graph();
 
-	std::vector<node> Astar(std::pair<int, int>, int);
+	std::vector<node> Astar(std::pair<int, int>);
     std::vector<node> BFS (std::pair<int, int>);
 
     int getDistance(std::pair<int, int>, std::pair<int, int>);
 
     //void expandBFSNode(std::pair<int, int> pos, std::queue< std::pair<int, int>>&, std::vector< std::pair<int, int>>&);
-    void expandNode(node, std::vector<node>&, std::queue<node>* = new std::queue<node> ());
+    void expandAStarNode(node, std::vector<node>&, std::vector<node>&);
+	void expandBFSNode(node, std::vector<node>&, std::queue<node>*);
 
     bool isNodeUnvisited(std::pair<int, int>, std::vector<node>&);
-    void buildNode(std::pair<int, int>, node, std::vector<node>&, std::queue<node>* = new std::queue<node> ());
+
+	void buildAStarNode(std::pair<int, int>, node, std::vector<node>&, std::vector<node>&);
+	void buildBFSNode(std::pair<int, int>, node, std::vector<node>&, std::queue<node>*);
+	int getAreaScore(std::pair<int, int>);
 
     bool betterNode(node, std::vector<node> &);
     node getBetterNode(node, std::vector<node> &);
