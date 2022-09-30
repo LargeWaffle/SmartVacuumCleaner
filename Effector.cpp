@@ -12,15 +12,14 @@ Effector::~Effector() {
 
 }
 
-void Effector::actOnCell(bool targetAction) {
-
-	if (targetAction){
-
-        if (map->getCell(map->getVacuum().first, map->getVacuum().second)->hasJewel())
-		    map->pickup();
-
-        if (map->getCell(map->getVacuum().first, map->getVacuum().second)->hasDust())
-            map->clean();
+void Effector::actOnCell(int targetAction) {
+	if (targetAction == 1)
+        map->pickup();
+    else if (targetAction == 2)
+        map->clean();
+    else if (targetAction == 3) {
+        map->pickup();
+        map->clean();
     }
 }
 

@@ -32,27 +32,30 @@ vector<Graph::node> Graph::BFS(pair<int, int> vacPos) {
 	qu.push(root);
 
 	while (!qu.empty()) {
-		node node = qu.front();
+		node current = qu.front();
 		qu.pop();
 
-		if (map->getCell(node->location.first, node->location.second)->hasDust()) {
-			node->actionData = true; // hotfix
+		if (map->getCell(current->location.first, current->location.second)->hasDust()) {
+            current->actionData = 2; // hotfix
 
-			if (node == root) {
-				solution.push_back(node);
+			if (current == root) {
+				solution.push_back(current);
 				return solution;
 			}
 
 			do {
-				solution.push_back(node);
-				node = node->parent;
-			} while (node != nullptr);
+				solution.push_back(current);
+                current = current->parent;
+			} while (current != nullptr);
 
 			return solution;
 
 		} else {
-			visited.push_back(node);
-			expandBFSNode(node, visited, &qu);
+			visited.push_back(current);
+			expandNode(current, visited);
+
+            for (auto child: current->children)
+                qu.push(child);
 		}
 	}
 
@@ -71,41 +74,40 @@ vector<Graph::node> Graph::Astar(pair<int, int> vacPos) {
 
 	while (!opened.empty()) {
 		int index = 0, i = 0;
-		node q = opened[0];
+		node current = opened[0];
 		for (auto elem: opened) {
-			if (elem->f < q->f) {
-				q = elem;
+			if (elem->f < current->f) {
+                current = elem;
 				index = i;
 			}
 			i++;
 		}
 
 		opened.erase(opened.begin() + index);
-		closed.push_back(q);
+		closed.push_back(current);
 
-		if (map->getCell(q->location.first, q->location.second)->hasDust()) { // we are in a solution node
+		if (map->getCell(current->location.first, current->location.second)->hasDust()) { // we are in a solution node
+            current->actionData = 2; // hotfix
 
-			q->actionData = true; // hotfix
-
-			if (q == root) {
-				solution.push_back(q);
+			if (current == root) {
+				solution.push_back(current);
 				return solution;
 			}
 
 			do {
-				solution.push_back(q);
-				q = q->parent;
-			} while (q->parent != nullptr);
+				solution.push_back(current);
+                current = current->parent;
+			} while (current->parent != nullptr);
 
 			return solution;
 		}
 
-		expandAStarNode(q, opened, closed);
+		expandNode(current, closed);
 
-		for (auto child: q->children) {
+		for (auto child: current->children) {
 
-			child->g = q->g + getDistance(child->location, q->location);
-			child->h = getAreaScore(q->location);
+			child->g = current->g + getDistance(child->location, current->location);
+			child->h = getAreaScore(current->location);
 			child->f = child->g + child->h;
 
 			if (betterNode(child, opened))
@@ -120,65 +122,39 @@ vector<Graph::node> Graph::Astar(pair<int, int> vacPos) {
 	return solution;
 }
 
-void Graph::expandAStarNode(node node, vector<Graph::node> &opened, vector<Graph::node> &closed) {
+void Graph::expandNode(node node, vector<Graph::node> &closed) {
 
 	int x = node->location.first, y = node->location.second;
 
 	if (x > 0 && isNodeUnvisited(make_pair(x - 1, y), closed))
-		buildAStarNode(make_pair(x - 1, y), node, opened, closed);
+		buildNode(make_pair(x - 1, y), node);
 
 	if (x < (MAP_SIZE - 1) && isNodeUnvisited(make_pair(x + 1, y), closed))
-		buildAStarNode(make_pair(x + 1, y), node, opened, closed);
+		buildNode(make_pair(x + 1, y), node);
 
 	if (y > 0 && isNodeUnvisited(make_pair(x, y - 1), closed))
-		buildAStarNode(make_pair(x, y - 1), node, opened, closed);
+		buildNode(make_pair(x, y - 1), node);
 
 	if (y < (MAP_SIZE - 1) && isNodeUnvisited(make_pair(x, y + 1), closed))
-		buildAStarNode(make_pair(x, y + 1), node, opened, closed);
+		buildNode(make_pair(x, y + 1), node);
 
 }
 
-void Graph::expandBFSNode(node node, vector<Graph::node> &opened, queue<Graph::node> *queue) {
 
-	int x = node->location.first, y = node->location.second;
-
-	if (x > 0 && isNodeUnvisited(make_pair(x - 1, y), opened))
-		buildBFSNode(make_pair(x - 1, y), node, opened, queue);
-
-	if (x < (MAP_SIZE - 1) && isNodeUnvisited(make_pair(x + 1, y), opened))
-		buildBFSNode(make_pair(x + 1, y), node, opened, queue);
-
-	if (y > 0 && isNodeUnvisited(make_pair(x, y - 1), opened))
-		buildBFSNode(make_pair(x, y - 1), node, opened, queue);
-
-	if (y < (MAP_SIZE - 1) && isNodeUnvisited(make_pair(x, y + 1), opened))
-		buildBFSNode(make_pair(x, y + 1), node, opened, queue);
-
-}
-
-void
-Graph::buildAStarNode(pair<int, int> loc, node parentNode, vector<Graph::node> &opened, vector<Graph::node> &closed) {
-
-	node newNode = new Node(loc);
-	parentNode->children.push_back(newNode);
-	newNode->parent = parentNode;
-}
-
-void Graph::buildBFSNode(pair<int, int> loc, node parentNode, vector<Graph::node> &opened, queue<Graph::node> *queue) {
+void Graph::buildNode(pair<int, int> loc, node parentNode) {
 
 	node newNode = new Node(loc);
 
-	newNode->actionData = map->getCell(loc.first, loc.second)->hasDust();
-
-	if (!newNode->actionData)
-		newNode->actionData = map->getCell(loc.first, loc.second)->hasJewel();
+    if (map->getCell(loc.first, loc.second)->hasJewel() && map->getCell(loc.first, loc.second)->hasDust())
+        newNode->actionData = 3;
+    else if (map->getCell(loc.first, loc.second)->hasDust())
+        newNode->actionData = 2;
+    else if (map->getCell(loc.first, loc.second)->hasJewel())
+        newNode->actionData = 1;
 
 	parentNode->children.push_back(newNode);
 	newNode->parent = parentNode;
-
-	queue->push(newNode);
 }
-
 
 bool Graph::isNodeUnvisited(pair<int, int> pos, vector<Graph::node> &list) {
 
@@ -206,6 +182,8 @@ Graph::node Graph::getBetterNode(node child, vector<Graph::node> &list) {
 
 	return nullptr;
 }
+
+
 
 int Graph::getAreaScore(pair<int, int> loc) {
 	int score = 0;

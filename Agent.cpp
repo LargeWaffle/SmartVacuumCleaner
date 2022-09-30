@@ -44,7 +44,7 @@ void Agent::agentWork() {
              actionList = getActions();
 
 
-        bool targetAction = actionList.back()->actionData;
+        int targetAction = actionList.back()->actionData;
         pair<int, int> targetLocation = actionList.back()->location;
 
         if (sens->locateAgent() != targetLocation)

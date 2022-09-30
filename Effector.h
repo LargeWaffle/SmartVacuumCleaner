@@ -11,7 +11,7 @@ public:
 
 	int travelCost(int, int);
 	void travel(int, int);
-	void actOnCell(bool);
+	void actOnCell(int);
 private:
 	Map * map;
 };

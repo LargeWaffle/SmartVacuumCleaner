@@ -11,7 +11,7 @@ int main()
 	srand(time(nullptr));
 
 	Map *mp = new Map();
-	Agent *vacuum = new Agent(mp, true);
+	Agent *vacuum = new Agent(mp, false);
 
 	thread env(&Map::objSpawn, mp);
 	thread roomba(&Agent::agentWork, vacuum);

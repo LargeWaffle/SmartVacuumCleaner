@@ -14,7 +14,7 @@ private:
                 : location(std::move(data)), nbtargs(targs) {};
 
         int cost = 1;
-        bool actionData = false;
+        int actionData = 0;
         int nbtargs;
         Node* parent = nullptr;
 
@@ -62,14 +62,12 @@ public:
 
     int getDistance(std::pair<int, int>, std::pair<int, int>);
 
-    //void expandBFSNode(std::pair<int, int> pos, std::queue< std::pair<int, int>>&, std::vector< std::pair<int, int>>&);
-    void expandAStarNode(node, std::vector<node>&, std::vector<node>&);
-	void expandBFSNode(node, std::vector<node>&, std::queue<node>*);
+    void expandNode(node, std::vector<node>&);
 
     bool isNodeUnvisited(std::pair<int, int>, std::vector<node>&);
 
-	void buildAStarNode(std::pair<int, int>, node, std::vector<node>&, std::vector<node>&);
-	void buildBFSNode(std::pair<int, int>, node, std::vector<node>&, std::queue<node>*);
+	void buildNode(std::pair<int, int>, node);
+
 	int getAreaScore(std::pair<int, int>);
 
     bool betterNode(node, std::vector<node> &);

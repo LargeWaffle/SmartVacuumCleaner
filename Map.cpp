@@ -47,12 +47,12 @@ void Map::objSpawn(){
 	while(true) {
         this_thread::sleep_for(chrono::milliseconds(5));
 	    mapUpdator();
-		// cout << *this << endl;
 	}
 }
 
 void Map::clean() {
 	getCell(getVacuum().first, getVacuum().second)->m_dust = false;
+    getCell(getVacuum().first, getVacuum().second)->m_jewel = false;
 }
 
 void Map::pickup() {
@@ -92,6 +92,7 @@ Cell::Cell(double dustSpawnRate, double jewelSpawnRate) {
 
 	if (jewelProb < jewelSpawnRate)
 		setJewel(true);
+
 }
 
 Cell::~Cell() {
