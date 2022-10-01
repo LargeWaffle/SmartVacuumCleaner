@@ -35,9 +35,9 @@ vector<Graph::node> Graph::BFS(pair<int, int> vacPos) {
 		qu.pop();
 
 		if (map->getCell(current->location.first, current->location.second)->hasDust()) {
-            current->actionData = 2; // hotfix
 
 			if (current == root) {
+                current->actionData = 2; // hotfix
 				solution.push_back(current);
 				return solution;
 			}
@@ -89,9 +89,14 @@ vector<Graph::node> Graph::Astar(pair<int, int> vacPos) {
 
 		if (map->getCell(current->location.first, current->location.second)->hasDust()) { // we are in a solution node
 
-			if (current == root) {
-                current->actionData = 2; // hotfix
-				solution.push_back(current);
+            if (current == root) {
+                if (map->getCell(current->location.first, current->location.second)->hasJewel() && map->getCell(current->location.first, current->location.second)->hasDust())
+                    current->actionData = 3;
+                else if (map->getCell(current->location.first, current->location.second)->hasDust())
+                    current->actionData = 2;
+                else if (map->getCell(current->location.first, current->location.second)->hasJewel())
+                    current->actionData = 1;
+                solution.push_back(current);
 				return solution;
 			}
 

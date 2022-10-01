@@ -7,7 +7,8 @@
 #include "Sensor.h"
 #include "Graph.h"
 
-#define MAX_LEARNING_RATE 5
+#define MAX_LEARNING_RATE 6
+#define TEST_DURATION 60s;
 
 class Agent {
 

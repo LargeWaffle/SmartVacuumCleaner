@@ -38,10 +38,13 @@ void Agent::agentWork() {
 
 	while (true) {
 
-		for (int learning_rate = 1; learning_rate < MAX_LEARNING_RATE+1; learning_rate++) { // first big boucle
-			for (int iter_count = 1; iter_count < 6; iter_count++) { // second big boucle
+        for (int learning_rate = 1; learning_rate < MAX_LEARNING_RATE + 1; learning_rate++) { // first big boucle
+            for (int iter_count = 1; iter_count < 11; iter_count++) { // second big boucle
 
-				problem = new Graph(MAX_LEARNING_RATE, sens->locateAgent(), map);
+                if (learning_rate == 6) // to test unlimited learning rate
+                    learning_rate = INT_MAX;
+
+                problem = new Graph(MAX_LEARNING_RATE, sens->locateAgent(), map);
 
 				auto start = high_resolution_clock::now();
 				auto iter_timer = high_resolution_clock::now();
@@ -50,11 +53,11 @@ void Agent::agentWork() {
 
 				auto elapsed_time = false;
 
-				while (!elapsed_time)  { // third big boucle - representing one test
-                    //cout << *map << endl;
-					if (actionList.empty() || stepNumber >= learning_rate) {
-						if (stepNumber >= learning_rate)
-							stepNumber = 0;
+                while (!elapsed_time) { // third big boucle - representing one test
+
+                    if (actionList.empty() || stepNumber >= learning_rate) {
+                        if (stepNumber >= learning_rate)
+                            stepNumber = 0;
 
 						actionList = getActions();
 						this_thread::sleep_for(chrono::milliseconds(1));
@@ -63,18 +66,19 @@ void Agent::agentWork() {
 					int targetAction = actionList.back()->actionData;
 					pair<int, int> targetLocation = actionList.back()->location;
 
-					if (sens->locateAgent() != targetLocation) {
-						eff->travel(targetLocation.first, targetLocation.second);
-						stepNumber++;
-					}
+                    if (sens->locateAgent() != targetLocation) {
+                        eff->travel(targetLocation.first, targetLocation.second);
+                        stepNumber++;
+                    }
+
+                    //cout << *map << endl;
+                    if (targetAction == 2 && map->getCell(targetLocation.first, targetLocation.second)->hasJewel())
+                        jewelCleaned += 1;
 
 					stepNumber += eff->actOnCell(targetAction, learning_rate - stepNumber);
 					batteryUsed += stepNumber;
 
-					if (targetAction == 2 && map->getCell(targetLocation.first, targetLocation.second)->hasJewel())
-						jewelCleaned += 1;
-
-					actionList.pop_back();
+                    actionList.pop_back();
 
 					auto current_time = high_resolution_clock::now();
 					auto iteration_time = duration_cast<seconds>(current_time - iter_timer) >= 1s;
@@ -86,8 +90,8 @@ void Agent::agentWork() {
 						iter_timer = high_resolution_clock::now();
 					}
 
-					elapsed_time = duration_cast<seconds>(current_time - start) >= 10s; // put 60 HERE
-				}
+                    elapsed_time = duration_cast<seconds>(current_time - start) >= TEST_DURATION;
+                }
 
 				perf_tab[learning_rate-1][iter_count-1] = evaluatePerf(perf_per_iter);
 				//cout << stepNumber << endl;
@@ -100,7 +104,39 @@ void Agent::agentWork() {
         for (int i = 0; i < MAX_LEARNING_RATE; i++) {
             cout << "Learning rate " << i+1 << " : " << evaluatePerf(perf_tab[i]) << endl;
         }
-	}
+
+        float curBest = 1000.0;
+        int best_learning_rate = 0;
+        for (int i = 0; i < MAX_LEARNING_RATE; i++) {
+            if (evaluatePerf(perf_tab[i]) < curBest) {
+                best_learning_rate = i;
+            }
+        }
+
+        delete problem;
+        problem = new Graph(MAX_LEARNING_RATE, sens->locateAgent(), map);
+
+        if (actionList.empty() || stepNumber >= best_learning_rate) {
+            if (stepNumber >= best_learning_rate)
+                stepNumber = 0;
+
+            actionList = getActions();
+            this_thread::sleep_for(chrono::milliseconds(1));
+        }
+
+        int targetAction = actionList.back()->actionData;
+        pair<int, int> targetLocation = actionList.back()->location;
+
+        if (sens->locateAgent() != targetLocation) {
+            eff->travel(targetLocation.first, targetLocation.second);
+            stepNumber++;
+        }
+
+        stepNumber += eff->actOnCell(targetAction, best_learning_rate - stepNumber);
+        batteryUsed += stepNumber;
+
+        actionList.pop_back();
+    }
 
 }
 
@@ -114,7 +150,8 @@ vector<Graph::node> Agent::getActions() {
 
 float Agent::perfEval(){
 
-	float perfScore = (float)(sens->getDustCoords().size()/MAP_SIZE*MAP_SIZE) * batteryUsed + jewelCleaned;
+    float dustAmount = sens->getDustCoords().size();
+    auto perfScore = (float) (((dustAmount / (MAP_SIZE * MAP_SIZE)) * batteryUsed) + 2 * jewelCleaned);
 
 	return perfScore;
 }
