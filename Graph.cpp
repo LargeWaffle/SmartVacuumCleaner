@@ -4,7 +4,7 @@
 
 using namespace std;
 
-Graph::Graph(pair<int, int> vacPos, Map *mp) {
+Graph::Graph(Map *mp) {
 	map = mp;
 }
 

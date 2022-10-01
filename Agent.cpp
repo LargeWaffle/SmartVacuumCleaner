@@ -44,7 +44,7 @@ void Agent::agentWork() {
                 if (learning_rate == 6) // to test unlimited learning rate
                     learning_rate = INT_MAX;
 
-                problem = new Graph(sens->locateAgent(), map);
+                problem = new Graph(map);
 
                 auto start = high_resolution_clock::now();
                 auto iter_timer = high_resolution_clock::now();
@@ -115,7 +115,7 @@ void Agent::agentWork() {
         }
 
         delete problem;
-        problem = new Graph(sens->locateAgent(), map);
+        problem = new Graph(map);
 
         if (actionList.empty() || stepNumber >= best_learning_rate) {
             if (stepNumber >= best_learning_rate)
@@ -149,7 +149,7 @@ vector<Graph::node> Agent::getActions() {
         return problem->BFS(sens->locateAgent());
 }
 
-float Agent::perfEval() {
+float Agent::perfEval() const {
 
     float dustAmount = sens->getDustCoords().size();
     auto perfScore = (float) (((dustAmount / (MAP_SIZE * MAP_SIZE)) * batteryUsed) + 2 * jewelCleaned);

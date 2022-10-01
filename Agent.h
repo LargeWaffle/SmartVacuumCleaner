@@ -13,7 +13,7 @@
 class Agent {
 
 public:
-	Agent(Map *mp, bool smart = false);
+	explicit Agent(Map *mp, bool smart = false);
 	~Agent();
 
 	void agentWork();
@@ -28,7 +28,7 @@ public:
 	int jewelCleaned = 0;
 	int batteryUsed = 0;
 
-	float perfEval();
+	float perfEval() const;
 	float evaluatePerf(std::vector<float>);
 private:
 

@@ -10,7 +10,7 @@ class Graph {
 private:
     class Node{
     public:
-        Node(std::pair<int, int> data, int targs = -1, std::vector<Node*> child_list = {})
+        explicit Node(std::pair<int, int> data, int targs = -1, const std::vector<Node*>& child_list = {})
                 : location(std::move(data)), nbtargs(targs) {};
 
         int cost = 1;
@@ -51,7 +51,7 @@ private:
 public:
     typedef Node * node;
 
-    Graph(std::pair<int, int>, Map*); // Constructor
+    explicit Graph(Map*); // Constructor
     ~Graph();
 
 	std::vector<node> Astar(std::pair<int, int>);
