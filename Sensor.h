@@ -14,8 +14,6 @@ public:
 	bool isDust(int, int);
 	std::pair<int, int> locateAgent();
     std::vector<std::pair<int, int>> getDustCoords();
-    void removeDust();
-    int dustyCells();
 
 private:
 	Map* map;

@@ -25,10 +25,6 @@ std::vector<std::pair<int, int>> Sensor::getDustCoords() {
     return dustCoords;
 }
 
-void Sensor :: removeDust() {
-    dustCoords.erase(dustCoords.begin());
-}
-
 bool Sensor::isJewel(int x, int y) {
 	return map->getCell(x, y)->hasJewel();
 }
@@ -39,8 +35,4 @@ bool Sensor::isDust(int x, int y) {
 
 pair<int, int> Sensor::locateAgent() {
 	return map->getVacuum();
-}
-
-int Sensor::dustyCells() {
-    dustCoords.size();
 }
