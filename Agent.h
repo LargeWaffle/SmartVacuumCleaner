@@ -7,29 +7,28 @@
 #include "Sensor.h"
 #include "Graph.h"
 
-#define LEARNING_RATE 4
+#define LEARNING_RATE 2000
 
 class Agent {
 
 public:
-	Agent(Map *mp, bool smart = false);
-	~Agent();
+    Agent(Map *mp, bool smart = false);
+    ~Agent();
 
-	void agentWork();
+    void agentWork();
     std::vector<Graph::node> getActions();
 
-	Sensor * sens;
-	Effector * eff;
+    Sensor * sens;
+    Effector * eff;
 
-	bool smartAgent;
-	int nbtargets;  // Desires
-	std::vector<Graph::node> actionList;    // Intentions
+    bool smartAgent;
+    std::vector<Graph::node> actionList;    // Intentions
 
 private:
 
-	float score = 0.0;
+    float score = 0.0;
 
-	Map * map;
+    Map * map;
     Graph * problem;
 };
 

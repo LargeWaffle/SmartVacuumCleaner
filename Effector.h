@@ -6,14 +6,13 @@
 class Effector {
 public:
 
-	Effector(Map*);
-	~Effector();
+    Effector(Map*);
+    ~Effector();
 
-	int travelCost(int, int);
-	void travel(int, int);
-	void actOnCell(int);
+    void travel(int, int);
+    int actOnCell(int, int);
 private:
-	Map * map;
+    Map * map;
 };
 
 

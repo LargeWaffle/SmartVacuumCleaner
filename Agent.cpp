@@ -18,7 +18,6 @@ Agent::Agent(Map *mp, bool smart) {
     eff = new Effector(mp);
     sens = new Sensor(mp);
 
-    nbtargets = 0;
     actionList = {};
 }
 
@@ -31,29 +30,30 @@ Agent::~Agent() {
 
 void Agent::agentWork() {
 
+    int stepNumber = 0;
     problem = new Graph(LEARNING_RATE, sens->locateAgent(), map);
 
-    int cpt = 0;
     while (true) {
-        cpt++;
-        //for (int i = 0; i < LEARNING_RATE; i++) {
 
-	    cout << cpt << endl;
-	    cout << *map << endl;
+        cout << stepNumber << endl;
+        cout << *map << endl;
 
-        if (actionList.empty()) {
-	        actionList = getActions();
-	        this_thread::sleep_for(chrono::milliseconds (1));
-		}
-
+        if (actionList.empty() || stepNumber >= LEARNING_RATE) {
+            if (stepNumber >= LEARNING_RATE)
+                stepNumber = 0;
+            actionList = getActions();
+            this_thread::sleep_for(chrono::milliseconds(1));
+        }
 
         int targetAction = actionList.back()->actionData;
         pair<int, int> targetLocation = actionList.back()->location;
 
-        if (sens->locateAgent() != targetLocation)
+        if (sens->locateAgent() != targetLocation) {
             eff->travel(targetLocation.first, targetLocation.second);
+            stepNumber++;
+        }
 
-        eff->actOnCell(targetAction);
+        stepNumber += eff->actOnCell(targetAction, LEARNING_RATE - stepNumber);
 
         actionList.pop_back();
 
@@ -63,10 +63,10 @@ void Agent::agentWork() {
 
 vector<Graph::node> Agent::getActions() {
 
-    nbtargets = sens->getDustCoords().size();  // Desires ? Function returns number of steps to take
+    vector<pair<int, int>> targets = sens->getDustCoords();  // Desires ? Function returns number of steps to take
 
     if (smartAgent)
-        return problem->Astar(sens->locateAgent());
+        return problem->Astar(sens->locateAgent(), targets);
     else
         return problem->BFS(sens->locateAgent());
 }
