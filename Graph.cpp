@@ -88,9 +88,9 @@ vector<Graph::node> Graph::Astar(pair<int, int> vacPos) {
 		closed.push_back(current);
 
 		if (map->getCell(current->location.first, current->location.second)->hasDust()) { // we are in a solution node
-            current->actionData = 2; // hotfix
 
 			if (current == root) {
+                current->actionData = 2; // hotfix
 				solution.push_back(current);
 				return solution;
 			}

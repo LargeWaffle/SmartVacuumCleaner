@@ -38,7 +38,7 @@ void Agent::agentWork() {
 
 	while (true) {
 
-		for (int start_learning_rate = 1; start_learning_rate < MAX_LEARNING_RATE; start_learning_rate++) { // first big boucle
+		for (int learning_rate = 1; learning_rate < MAX_LEARNING_RATE+1; learning_rate++) { // first big boucle
 			for (int iter_count = 1; iter_count < 6; iter_count++) { // second big boucle
 
 				problem = new Graph(MAX_LEARNING_RATE, sens->locateAgent(), map);
@@ -46,13 +46,14 @@ void Agent::agentWork() {
 				auto start = high_resolution_clock::now();
 				auto iter_timer = high_resolution_clock::now();
 
-				vector<float> perf_per_iter(10, 0); // put 60 HERE
+				vector<float> perf_per_iter;
 
 				auto elapsed_time = false;
 
 				while (!elapsed_time)  { // third big boucle - representing one test
-					if (actionList.empty() || stepNumber >= start_learning_rate) {
-						if (stepNumber >= start_learning_rate)
+                    //cout << *map << endl;
+					if (actionList.empty() || stepNumber >= learning_rate) {
+						if (stepNumber >= learning_rate)
 							stepNumber = 0;
 
 						actionList = getActions();
@@ -67,7 +68,7 @@ void Agent::agentWork() {
 						stepNumber++;
 					}
 
-					stepNumber += eff->actOnCell(targetAction, start_learning_rate - stepNumber);
+					stepNumber += eff->actOnCell(targetAction, learning_rate - stepNumber);
 					batteryUsed += stepNumber;
 
 					if (targetAction == 2 && map->getCell(targetLocation.first, targetLocation.second)->hasJewel())
@@ -88,15 +89,17 @@ void Agent::agentWork() {
 					elapsed_time = duration_cast<seconds>(current_time - start) >= 10s; // put 60 HERE
 				}
 
-				perf_tab[start_learning_rate-1][iter_count-1] = evaluatePerf(perf_per_iter);
+				perf_tab[learning_rate-1][iter_count-1] = evaluatePerf(perf_per_iter);
 				//cout << stepNumber << endl;
-				//cout << *map << endl;
-				cout << perf_tab[start_learning_rate-1][iter_count-1] << " ";
+				cout << perf_tab[learning_rate-1][iter_count-1] << " ";
 
 			}
 			cout << endl;
 
 		}
+        for (int i = 0; i < MAX_LEARNING_RATE; i++) {
+            cout << "Learning rate " << i+1 << " : " << evaluatePerf(perf_tab[i]) << endl;
+        }
 	}
 
 }
