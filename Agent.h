@@ -7,7 +7,7 @@
 #include "Sensor.h"
 #include "Graph.h"
 
-#define LEARNING_RATE 16
+#define MAX_LEARNING_RATE 5
 
 class Agent {
 
@@ -24,6 +24,11 @@ public:
 	bool smartAgent;
 	std::vector<Graph::node> actionList;    // Intentions
 
+	int jewelCleaned = 0;
+	int batteryUsed = 0;
+
+	float perfEval();
+	float evaluatePerf(std::vector<float>);
 private:
 
 	float score = 0.0;
