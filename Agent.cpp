@@ -10,6 +10,7 @@ using namespace std::chrono;
 Agent::Agent(Map *mp, bool smart) {
 
     map = mp;
+	problem = nullptr;
     smartAgent = smart;
 
     int coordX = rand() % mp->getMapSize();
@@ -43,7 +44,7 @@ void Agent::agentWork() {
                 if (learning_rate == 6) // to test unlimited learning rate
                     learning_rate = INT_MAX;
 
-                problem = new Graph(MAX_LEARNING_RATE, sens->locateAgent(), map);
+                problem = new Graph(sens->locateAgent(), map);
 
                 auto start = high_resolution_clock::now();
                 auto iter_timer = high_resolution_clock::now();
@@ -71,7 +72,7 @@ void Agent::agentWork() {
                     }
 
                     //cout << *map << endl;
-                    if (targetAction == 2 && map->getCell(targetLocation.first, targetLocation.second)->hasJewel())
+                    if (targetAction == 2 && sens->isJewel(targetLocation.first, targetLocation.second))
                         jewelCleaned += 1;
 
                     stepNumber += eff->actOnCell(targetAction, learning_rate - stepNumber);
@@ -114,7 +115,7 @@ void Agent::agentWork() {
         }
 
         delete problem;
-        problem = new Graph(MAX_LEARNING_RATE, sens->locateAgent(), map);
+        problem = new Graph(sens->locateAgent(), map);
 
         if (actionList.empty() || stepNumber >= best_learning_rate) {
             if (stepNumber >= best_learning_rate)

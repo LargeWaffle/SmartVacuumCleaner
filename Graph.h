@@ -46,14 +46,12 @@ private:
         };
     };
 
-    int learning_rate;
     Map * map;
 
 public:
     typedef Node * node;
-    //node root;
 
-    Graph(int, std::pair<int, int>, Map*); // Constructor
+    Graph(std::pair<int, int>, Map*); // Constructor
     ~Graph();
 
 	std::vector<node> Astar(std::pair<int, int>);

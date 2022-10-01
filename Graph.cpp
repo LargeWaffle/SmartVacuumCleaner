@@ -4,9 +4,7 @@
 
 using namespace std;
 
-Graph::Graph(int lr, pair<int, int> vacPos, Map *mp) {
-	learning_rate = lr;
-	//root = new Node(vacPos);
+Graph::Graph(pair<int, int> vacPos, Map *mp) {
 	map = mp;
 }
 
