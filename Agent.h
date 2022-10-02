@@ -8,7 +8,9 @@
 #include "Graph.h"
 
 #define MAX_LEARNING_RATE 6
-#define TEST_DURATION 60s;
+#define TEST_DURATION 60s
+#define TEST_NUMBER 10
+#define JEWEL_PENALTY 1
 
 class Agent {
 

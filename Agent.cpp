@@ -39,10 +39,7 @@ void Agent::agentWork() {
     while (true) {
 
         for (int learning_rate = 1; learning_rate < MAX_LEARNING_RATE + 1; learning_rate++) { // first big boucle
-            for (int iter_count = 1; iter_count < 11; iter_count++) { // second big boucle
-
-                if (learning_rate == 6) // to test unlimited learning rate
-                    learning_rate = INT_MAX;
+            for (int iter_count = 1; iter_count < TEST_NUMBER + 1; iter_count++) { // second big boucle
 
                 problem = new Graph(map);
 
@@ -54,8 +51,7 @@ void Agent::agentWork() {
                 auto elapsed_time = false;
 
                 while (!elapsed_time) { // third big boucle - representing one test
-
-                    if (actionList.empty() || stepNumber >= learning_rate) {
+                    if (actionList.empty() || (stepNumber >= learning_rate && learning_rate != 6)) { // to test unlimited
                         if (stepNumber >= learning_rate)
                             stepNumber = 0;
 
@@ -92,7 +88,6 @@ void Agent::agentWork() {
 
                     elapsed_time = duration_cast<seconds>(current_time - start) >= TEST_DURATION;
                 }
-
                 perf_tab[learning_rate - 1][iter_count - 1] = evaluatePerf(perf_per_iter);
                 //cout << stepNumber << endl;
                 cout << perf_tab[learning_rate - 1][iter_count - 1] << " ";
@@ -110,9 +105,13 @@ void Agent::agentWork() {
         int best_learning_rate = 0;
         for (int i = 0; i < MAX_LEARNING_RATE; i++) {
             if (evaluatePerf(perf_tab[i]) < curBest) {
+                curBest = evaluatePerf(perf_tab[i]);
                 best_learning_rate = i;
             }
         }
+
+        cout << "best learning rate : " << best_learning_rate + 1 << endl;
+        abort();
 
         delete problem;
         problem = new Graph(map);
@@ -152,7 +151,7 @@ vector<Graph::node> Agent::getActions() {
 float Agent::perfEval() const {
 
     float dustAmount = sens->getDustCoords().size();
-    auto perfScore = (float) (((dustAmount / (MAP_SIZE * MAP_SIZE)) * batteryUsed) + 2 * jewelCleaned);
+    auto perfScore = (float) (((dustAmount / (MAP_SIZE * MAP_SIZE)) * batteryUsed) + JEWEL_PENALTY*jewelCleaned);
 
     return perfScore;
 }
