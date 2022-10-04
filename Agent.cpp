@@ -143,7 +143,9 @@ void Agent::agentWork() {
 vector<Graph::node> Agent::getActions() {
 
     if (smartAgent)
-        return problem->Astar(sens->locateAgent());
+       // return problem->Astar(sens->locateAgent());
+    // pour la seconde version du a*, remplacer la ligne du dessus par
+        return problem->AstarTwo(sens->locateAgent(), sens->getDustCoords());
     else
         return problem->BFS(sens->locateAgent());
 }

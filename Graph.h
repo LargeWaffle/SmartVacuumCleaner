@@ -11,11 +11,11 @@ private:
     class Node{
     public:
         explicit Node(std::pair<int, int> data, int targs = -1, const std::vector<Node*>& child_list = {})
-                : location(std::move(data)), nbtargs(targs) {};
+                : location(std::move(data)){};
 
         int cost = 1;
         int actionData = 0;
-        int nbtargs;
+        std::vector<std::pair<int, int>> targets;
         Node* parent = nullptr;
 
         int g = 0;
@@ -24,22 +24,6 @@ private:
 
 		std::pair<int, int> location;
         std::vector<Node*> children;
-
-        Node& operator=(const Node& old_node){
-
-            location = old_node.location;
-            nbtargs = old_node.nbtargs;
-            children = old_node.children;
-            parent = old_node.parent;
-            actionData = old_node.actionData;
-            cost = old_node.cost;
-
-            g = old_node.g;
-            h = old_node.h;
-            f = old_node.f;
-
-            return *this;
-        }
 
         bool operator<(const Node& nd) const{
             return cost < nd.cost;
@@ -69,6 +53,14 @@ public:
 
 	bool betterNode(node, std::vector<node> &);
 	int cellScore(std::pair<int, int> loc);
+
+    // Fonctions de la deuxième version du A*
+
+    std::vector<node> AstarTwo(std::pair<int, int>, std::vector<std::pair<int, int>>);
+    void expandNodeTwo(node, std::vector<node>&);
+    bool isNodeUnvisitedTwo(std::pair<int, int>, std::vector<node>&, node);
+    bool betterNodeTwo(node, std::vector<node> &);
+    int getClosestDust(std::pair<int, int>, std::vector<std::pair<int, int>>);
 };
 
 
