@@ -131,20 +131,23 @@ vector<Graph::node> Graph::Astar(pair<int, int> vacPos, vector<pair<int, int>> i
 
             if (betterNode(child, opened))
                 continue;
-
-            node temp = elem;
-            for (int k = 0; k < 8; k++)
-                while (temp->parent != nullptr)
+/*
+            node temp = child;
+            bool t = false;
+            for (int k = 0; k < 5; k++) {
+                while (temp->parent != nullptr && !t) {
                     temp = temp->parent;
-
-            if (temp->targets.size() != elem->targets.size()) {
-
-            opened.push_back(child);
+                    if (temp->targets.size() != child->targets.size()) {
+                        t = true;
+                        opened.push_back(child);
+                    }
+                }
+            }
+            if (temp->parent == nullptr)*/
+                opened.push_back(child);
 
         }
     }
-
-
     solution.push_back(root);
     return solution;
 }
