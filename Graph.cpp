@@ -35,14 +35,14 @@ vector<Graph::node> Graph::BFS(pair<int, int> vacPos) {
 		if (map->getCell(current->location.first, current->location.second)->hasDust()) {
 
 			if (current == root) {
-                current->actionData = 2; // hotfix
+				current->actionData = 2; // hotfix
 				solution.push_back(current);
 				return solution;
 			}
 
 			do {
 				solution.push_back(current);
-                current = current->parent;
+				current = current->parent;
 			} while (current->parent != nullptr);
 
 			return solution;
@@ -51,8 +51,8 @@ vector<Graph::node> Graph::BFS(pair<int, int> vacPos) {
 			visited.push_back(current);
 			expandNode(current, visited);
 
-            for (auto child: current->children)
-                qu.push(child);
+			for (auto child: current->children)
+				qu.push(child);
 		}
 	}
 
@@ -76,7 +76,7 @@ vector<Graph::node> Graph::Astar(pair<int, int> vacPos) {
 		node current = opened[0];
 		for (auto elem: opened) {
 			if (elem->f < current->f) {
-                current = elem;
+				current = elem;
 				index = i;
 			}
 			i++;
@@ -87,20 +87,21 @@ vector<Graph::node> Graph::Astar(pair<int, int> vacPos) {
 
 		if (map->getCell(current->location.first, current->location.second)->hasDust()) { // we are in a solution node
 
-            if (current == root) {
-                if (map->getCell(current->location.first, current->location.second)->hasJewel() && map->getCell(current->location.first, current->location.second)->hasDust())
-                    current->actionData = 3;
-                else if (map->getCell(current->location.first, current->location.second)->hasDust())
-                    current->actionData = 2;
-                else if (map->getCell(current->location.first, current->location.second)->hasJewel())
-                    current->actionData = 1;
-                solution.push_back(current);
+			if (current == root) {
+				if (map->getCell(current->location.first, current->location.second)->hasJewel() &&
+				    map->getCell(current->location.first, current->location.second)->hasDust())
+					current->actionData = 3;
+				else if (map->getCell(current->location.first, current->location.second)->hasDust())
+					current->actionData = 2;
+				else if (map->getCell(current->location.first, current->location.second)->hasJewel())
+					current->actionData = 1;
+				solution.push_back(current);
 				return solution;
 			}
 
 			do {
 				solution.push_back(current);
-                current = current->parent;
+				current = current->parent;
 			} while (current->parent != nullptr);
 
 			return solution;
@@ -111,9 +112,7 @@ vector<Graph::node> Graph::Astar(pair<int, int> vacPos) {
 		for (auto child: current->children) {
 
 			child->g = current->g + getDistance(child->location, current->location);
-
 			child->h = maxScore - scoreTab[child->location.first][child->location.second];
-
 			child->f = child->g + child->h;
 
 			if (betterNode(child, opened))
@@ -151,12 +150,12 @@ void Graph::buildNode(pair<int, int> loc, node parentNode) {
 
 	node newNode = new Node(loc);
 
-    if (map->getCell(loc.first, loc.second)->hasJewel() && map->getCell(loc.first, loc.second)->hasDust())
-        newNode->actionData = 3;
-    else if (map->getCell(loc.first, loc.second)->hasDust())
-        newNode->actionData = 2;
-    else if (map->getCell(loc.first, loc.second)->hasJewel())
-        newNode->actionData = 1;
+	if (map->getCell(loc.first, loc.second)->hasJewel() && map->getCell(loc.first, loc.second)->hasDust())
+		newNode->actionData = 3;
+	else if (map->getCell(loc.first, loc.second)->hasDust())
+		newNode->actionData = 2;
+	else if (map->getCell(loc.first, loc.second)->hasJewel())
+		newNode->actionData = 1;
 
 	parentNode->children.push_back(newNode);
 	newNode->parent = parentNode;
@@ -186,7 +185,7 @@ vector<vector<int>> Graph::generateScores(int &maxScore) {
 
 	for (int i = 0; i < MAP_SIZE; i++)
 		for (int j = 0; j < MAP_SIZE; j++) {
-			tab[i][j] = cellScore(make_pair(i,j));
+			tab[i][j] = cellScore(make_pair(i, j));
 			if (tab[i][j] > maxScore)
 				maxScore = tab[i][j];
 		}
@@ -199,8 +198,8 @@ int Graph::cellScore(pair<int, int> loc) {
 
 	for (int i = 0; i < MAP_SIZE; i++)
 		for (int j = 0; j < MAP_SIZE; j++)
-			if (getDistance(loc, make_pair(i,j)) < 3)
-				if (map->getCell(i,j)->hasDust())
+			if (getDistance(loc, make_pair(i, j)) < 3)
+				if (map->getCell(i, j)->hasDust())
 					score += 1;
 
 	return score;
@@ -211,143 +210,140 @@ int Graph::cellScore(pair<int, int> loc) {
 
 vector<Graph::node> Graph::AstarTwo(pair<int, int> vacPos, vector<pair<int, int>> initTargets) {
 
-    vector<node> opened;
-    vector<node> closed;
-    vector<node> solution;
-    node root = new Node(vacPos);
-    root->targets = initTargets;
+	vector<node> opened;
+	vector<node> closed;
+	vector<node> solution;
+	node root = new Node(vacPos);
+	root->targets = initTargets;
 
-    if (map->getCell(root->location.first, root->location.second)->hasDust()) {
-        solution.push_back(root);
-        root->actionData = 2;
-        if (map->getCell(root->location.first, root->location.second)->hasJewel())
-            root->actionData = 1;
-        root->targets.erase(remove(root->targets.begin(), root->targets.end(), root->location), root->targets.end());
-    }
+	if (map->getCell(root->location.first, root->location.second)->hasDust()) {
+		solution.push_back(root);
+		root->actionData = 2;
+		if (map->getCell(root->location.first, root->location.second)->hasJewel())
+			root->actionData = 1;
+		root->targets.erase(remove(root->targets.begin(), root->targets.end(), root->location), root->targets.end());
+	}
 
-    int maxScore = 0;
-    vector<vector<int>> scoreTab = generateScores(maxScore);
-    opened.push_back(root);
+	int maxScore = 0;
+	vector<vector<int>> scoreTab = generateScores(maxScore);
+	opened.push_back(root);
 
-    while (!opened.empty()) {
-        int index = 0, i = 0;
-        node current = opened[0];
-        for (auto elem: opened) {
-            if (elem->f < current->f) {
-                current = elem;
-                index = i;
-            }
-            i++;
-        }
+	while (!opened.empty()) {
+		int index = 0, i = 0;
+		node current = opened[0];
+		for (auto elem: opened) {
+			if (elem->f < current->f) {
+				current = elem;
+				index = i;
+			}
+			i++;
+		}
 
-        opened.erase(opened.begin() + index);
-        closed.push_back(current);
+		opened.erase(opened.begin() + index);
+		closed.push_back(current);
 
-        if (current->h == 0 && current != root)
-            current->targets.erase(remove(current->targets.begin(), current->targets.end(), current->location),
-                                   current->targets.end());
+		if (current->h == 0 && current != root)
+			current->targets.erase(remove(current->targets.begin(), current->targets.end(), current->location),
+			                       current->targets.end());
 
-        if (current->targets.empty()) { // we are in a solution node
-            current->actionData = 2; // hotfix
+		if (current->targets.empty()) { // we are in a solution node
+			current->actionData = 2; // hotfix
 
-            if (current == root) {
-                solution.push_back(current);
-                return solution;
-            }
+			if (current == root) {
+				solution.push_back(current);
+				return solution;
+			}
 
-            do {
-                solution.push_back(current);
-                current = current->parent;
-            } while (current->parent != nullptr);
+			do {
+				solution.push_back(current);
+				current = current->parent;
+			} while (current->parent != nullptr);
 
-            return solution;
-        }
+			return solution;
+		}
 
-        expandNodeTwo(current, closed);
+		expandNodeTwo(current, closed);
 
-        for (auto child: current->children) {
+		for (auto child: current->children) {
 
-            child->g = current->g + getDistance(child->location, current->location);
-
-            child->targets = current->targets;
-
-            child->h = getClosestDust(child->location, child->targets);
-
-            child->f = child->g + child->h;
+			child->g = current->g + getDistance(child->location, current->location);
+			child->targets = current->targets;
+			child->h = getClosestDust(child->location, child->targets);
+			child->f = child->g + child->h;
 
 
-            if (betterNodeTwo(child, opened))
-                continue;
+			if (betterNodeTwo(child, opened))
+				continue;
 
-            opened.push_back(child);
+			opened.push_back(child);
 
-        }
-    }
-    solution.push_back(root);
-    return solution;
+		}
+	}
+	solution.push_back(root);
+	return solution;
 }
 
 void Graph::expandNodeTwo(node node, vector<Graph::node> &closed) {
 
-    int x = node->location.first, y = node->location.second;
+	int x = node->location.first, y = node->location.second;
 
-    if (node->parent != nullptr) {
-        if (x > 0 && isNodeUnvisitedTwo(make_pair(x - 1, y), closed, node) &&
-            node->parent->location != make_pair(x - 1, y))
-            buildNode(make_pair(x - 1, y), node);
+	if (node->parent != nullptr) {
+		if (x > 0 && isNodeUnvisitedTwo(make_pair(x - 1, y), closed, node) &&
+		    node->parent->location != make_pair(x - 1, y))
+			buildNode(make_pair(x - 1, y), node);
 
-        if (x < (MAP_SIZE - 1) && isNodeUnvisitedTwo(make_pair(x + 1, y), closed, node) &&
-            node->parent->location != make_pair(x + 1, y))
-            buildNode(make_pair(x + 1, y), node);
+		if (x < (MAP_SIZE - 1) && isNodeUnvisitedTwo(make_pair(x + 1, y), closed, node) &&
+		    node->parent->location != make_pair(x + 1, y))
+			buildNode(make_pair(x + 1, y), node);
 
-        if (y > 0 && isNodeUnvisitedTwo(make_pair(x, y - 1), closed, node) &&
-            node->parent->location != make_pair(x, y - 1))
-            buildNode(make_pair(x, y - 1), node);
+		if (y > 0 && isNodeUnvisitedTwo(make_pair(x, y - 1), closed, node) &&
+		    node->parent->location != make_pair(x, y - 1))
+			buildNode(make_pair(x, y - 1), node);
 
-        if (y < (MAP_SIZE - 1) && isNodeUnvisitedTwo(make_pair(x, y + 1), closed, node) &&
-            node->parent->location != make_pair(x, y + 1))
-            buildNode(make_pair(x, y + 1), node);
-    } else {
-        if (x > 0 && isNodeUnvisitedTwo(make_pair(x - 1, y), closed, node))
-            buildNode(make_pair(x - 1, y), node);
+		if (y < (MAP_SIZE - 1) && isNodeUnvisitedTwo(make_pair(x, y + 1), closed, node) &&
+		    node->parent->location != make_pair(x, y + 1))
+			buildNode(make_pair(x, y + 1), node);
+	} else {
+		if (x > 0 && isNodeUnvisitedTwo(make_pair(x - 1, y), closed, node))
+			buildNode(make_pair(x - 1, y), node);
 
-        if (x < (MAP_SIZE - 1) && isNodeUnvisitedTwo(make_pair(x + 1, y), closed, node))
-            buildNode(make_pair(x + 1, y), node);
+		if (x < (MAP_SIZE - 1) && isNodeUnvisitedTwo(make_pair(x + 1, y), closed, node))
+			buildNode(make_pair(x + 1, y), node);
 
-        if (y > 0 && isNodeUnvisitedTwo(make_pair(x, y - 1), closed, node))
-            buildNode(make_pair(x, y - 1), node);
+		if (y > 0 && isNodeUnvisitedTwo(make_pair(x, y - 1), closed, node))
+			buildNode(make_pair(x, y - 1), node);
 
-        if (y < (MAP_SIZE - 1) && isNodeUnvisitedTwo(make_pair(x, y + 1), closed, node))
-            buildNode(make_pair(x, y + 1), node);
-    }
+		if (y < (MAP_SIZE - 1) && isNodeUnvisitedTwo(make_pair(x, y + 1), closed, node))
+			buildNode(make_pair(x, y + 1), node);
+	}
 
 }
 
 bool Graph::isNodeUnvisitedTwo(pair<int, int> pos, vector<Graph::node> &list, node node) {
 
-    for (auto elem: list)
-        //if (elem->location == pos)
-        if (elem->location == pos && node->targets == elem->targets)
-            return false;
+	for (auto elem: list)
+		//if (elem->location == pos)
+		if (elem->location == pos && node->targets == elem->targets)
+			return false;
 
-    return true;
+	return true;
 }
 
 bool Graph::betterNodeTwo(node child, vector<Graph::node> &list) {
 
-    for (auto elem: list)
-        if (elem->location == child->location && elem->g < child->g && elem->targets == child->targets)
-            return true;
+	for (auto elem: list)
+		if (elem->location == child->location && elem->g < child->g && elem->targets == child->targets)
+			return true;
 
-    return false;
+	return false;
 }
 
 int Graph::getClosestDust(pair<int, int> pos, vector<pair<int, int>> targets) {
-    int dist = 20;
-    for (int i = 0; i < MAP_SIZE; i++)
-        for (int j = 0; j < MAP_SIZE; j++)
-            if (map->getCell(i, j)->hasDust() && count(targets.begin(), targets.end(), make_pair(i, j)))
-                if (getDistance(pos, make_pair(i, j)) < dist)
-                    dist = getDistance(pos, make_pair(i, j));
-    return dist;
+	int dist = 20;
+	for (int i = 0; i < MAP_SIZE; i++)
+		for (int j = 0; j < MAP_SIZE; j++)
+			if (map->getCell(i, j)->hasDust() && count(targets.begin(), targets.end(), make_pair(i, j)))
+				if (getDistance(pos, make_pair(i, j)) < dist)
+					dist = getDistance(pos, make_pair(i, j));
+	return dist;
 }

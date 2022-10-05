@@ -32,9 +32,9 @@ public:
 
 	float perfEval() const;
 	float evaluatePerf(std::vector<float>);
-private:
+	void perform(int&, const int&);
 
-	float score = 0.0;
+private:
 
 	Map * map;
     Graph * problem;

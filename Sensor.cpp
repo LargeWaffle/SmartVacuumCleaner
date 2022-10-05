@@ -8,10 +8,6 @@ Sensor::Sensor(Map *mp) {
 	map = mp;
 }
 
-Sensor::~Sensor() {
-
-}
-
 std::vector<std::pair<int, int>> Sensor::getDustCoords() {
 	dustCoords.clear();
 
