@@ -31,81 +31,28 @@ Agent::~Agent() {
 
 }
 
-void Agent::agentWork() {
+void Agent::agentWork(int UC) {
 
-	int stepNumber = 0;
-	vector<vector<float>> perf_tab(MAX_LEARNING_RATE, vector<float>(MAX_LEARNING_RATE));
-
-	while (true) {
-
-		for (int learning_rate = 1; learning_rate < MAX_LEARNING_RATE + 1; learning_rate++) { // first big boucle
-			for (int iter_count = 1; iter_count < TEST_NUMBER + 1; iter_count++) { // second big boucle
-
-				problem = new Graph(map);   // Beliefs
-
-				auto start = high_resolution_clock::now();
-				auto iter_timer = high_resolution_clock::now();
-
-				vector<float> perf_per_iter;
-
-				auto elapsed_time = false;
-
-				while (!elapsed_time) { // third big boucle - representing one test
-
-					perform(stepNumber, learning_rate);
-					// cout << *map << endl;
-
-					auto current_time = high_resolution_clock::now();
-					auto iteration_time = duration_cast<seconds>(current_time - iter_timer) >= 1s;
-
-					if (iteration_time) {
-						perf_per_iter.push_back(perfEval());
-						batteryUsed = 0;
-						jewelCleaned = 0;
-						iter_timer = high_resolution_clock::now();
-					}
-
-					elapsed_time = duration_cast<seconds>(current_time - start) >= TEST_DURATION;
-				}
-
-				perf_tab[learning_rate - 1][iter_count - 1] = evaluatePerf(perf_per_iter);
-				cout << perf_tab[learning_rate - 1][iter_count - 1] << " ";
-
-			}
-			cout << endl;
-
-		}
-
-		for (int i = 0; i < MAX_LEARNING_RATE; i++) {
-			cout << "Learning rate " << i + 1 << " : " << evaluatePerf(perf_tab[i]) << endl;
-		}
-
-		float curBest = 1000.0;
-		int best_learning_rate = 0;
-
-		for (int i = 0; i < MAX_LEARNING_RATE; i++) {
-			if (evaluatePerf(perf_tab[i]) < curBest) {
-				curBest = evaluatePerf(perf_tab[i]);
-				best_learning_rate = i;
-			}
-		}
-
-		cout << "best learning rate : " << best_learning_rate + 1 << endl;
-
-		delete problem;
-		problem = new Graph(map);
-
-		perform(stepNumber, best_learning_rate);
-	}
+    switch (UC) {
+        case 1:
+            perform(4, UC);
+            break;
+        case 2 ... 3:
+            perform(2, UC);
+            break;
+        case 4:
+            perform(runTest(), UC);
+            break;
+    }
 
 }
 
-vector<Graph::node> Agent::getActions() {
+vector<Graph::node> Agent::getActions(int UC) {
 
-	if (smartAgent)
+	if (smartAgent && (UC != 3))
 		return problem->Astar(sens->locateAgent());
-		// pour la seconde version du a*, remplacer la ligne du dessus par
-		// return problem->AstarTwo(sens->locateAgent(), sens->getDustCoords());
+    else if (smartAgent && (UC == 3))
+		return problem->AstarTwo(sens->locateAgent(), sens->getDustCoords());
 	else
 		return problem->BFS(sens->locateAgent());
 }
@@ -128,26 +75,117 @@ float Agent::evaluatePerf(vector<float> perfs) {
 	return avg;
 }
 
-void Agent::perform(int &stepNumber, const int &lr) {
+void Agent::perform(const int lr, const int UC) {
 
-	if (actionList.empty() || stepNumber >= lr) {
-		if (stepNumber >= lr)
-			stepNumber = 0;
+    int stepNumber = 0;
+    problem = new Graph(map);
 
-		actionList = getActions();
-		this_thread::sleep_for(chrono::milliseconds(1));
-	}
+    while (true) {
 
-	int targetAction = actionList.back()->actionData;
-	pair<int, int> targetLocation = actionList.back()->location;
+        cout << *map << endl;
 
-	if (sens->locateAgent() != targetLocation) {
-		eff->travel(targetLocation.first, targetLocation.second);
-		stepNumber++;
-	}
+        if (actionList.empty() || stepNumber >= lr) {
+            if (stepNumber >= lr)
+                stepNumber = 0;
 
-	stepNumber += eff->actOnCell(targetAction, lr - stepNumber);
-	batteryUsed += stepNumber;
+            actionList = getActions(UC);
+            this_thread::sleep_for(chrono::milliseconds(1));
+        }
 
-	actionList.pop_back();
+        int targetAction = actionList.back()->actionData;
+        pair<int, int> targetLocation = actionList.back()->location;
+
+        if (sens->locateAgent() != targetLocation) {
+            eff->travel(targetLocation.first, targetLocation.second);
+            stepNumber++;
+        }
+
+        stepNumber += eff->actOnCell(targetAction, lr - stepNumber);
+        batteryUsed += stepNumber;
+
+        actionList.pop_back();
+    }
 }
+
+int Agent :: runTest() {
+    int stepNumber = 0;
+    vector<vector<float>> perf_tab(MAX_LEARNING_RATE, vector<float>(MAX_LEARNING_RATE));
+
+    for (int learning_rate = 1; learning_rate < MAX_LEARNING_RATE + 1; learning_rate++) { // first big boucle
+            for (int iter_count = 1; iter_count < TEST_NUMBER + 1; iter_count++) { // second big boucle
+
+                problem = new Graph(map);   // Beliefs
+
+                auto start = high_resolution_clock::now();
+                auto iter_timer = high_resolution_clock::now();
+
+                vector<float> perf_per_iter;
+
+                auto elapsed_time = false;
+
+                while (!elapsed_time) { // third big boucle - representing one test
+
+                    // perform
+
+                    if (actionList.empty() || stepNumber >= learning_rate) {
+                        if (stepNumber >= learning_rate)
+                            stepNumber = 0;
+
+                        actionList = getActions(4);
+                        this_thread::sleep_for(chrono::milliseconds(1));
+                    }
+
+                    int targetAction = actionList.back()->actionData;
+                    pair<int, int> targetLocation = actionList.back()->location;
+
+                    if (sens->locateAgent() != targetLocation) {
+                        eff->travel(targetLocation.first, targetLocation.second);
+                        stepNumber++;
+                    }
+
+                    stepNumber += eff->actOnCell(targetAction, learning_rate - stepNumber);
+                    batteryUsed += stepNumber;
+
+                    actionList.pop_back();
+
+
+                    auto current_time = high_resolution_clock::now();
+                    auto iteration_time = duration_cast<seconds>(current_time - iter_timer) >= 1s;
+
+                    if (iteration_time) {
+                        perf_per_iter.push_back(perfEval());
+                        batteryUsed = 0;
+                        jewelCleaned = 0;
+                        iter_timer = high_resolution_clock::now();
+                    }
+
+                    elapsed_time = duration_cast<seconds>(current_time - start) >= TEST_DURATION;
+                }
+
+                perf_tab[learning_rate - 1][iter_count - 1] = evaluatePerf(perf_per_iter);
+                cout << "Test number " << iter_count << " for learning rate " << learning_rate << " : ";
+                cout << perf_tab[learning_rate - 1][iter_count - 1] << endl;
+
+            }
+            cout << endl;
+
+        }
+
+        for (int i = 0; i < MAX_LEARNING_RATE; i++) {
+            cout << "Mean for learning rate " << i + 1 << " : " << evaluatePerf(perf_tab[i]) << endl;
+        }
+
+        float curBest = 1000.0;
+        int best_learning_rate = 0;
+
+        for (int i = 0; i < MAX_LEARNING_RATE; i++) {
+            if (evaluatePerf(perf_tab[i]) < curBest) {
+                curBest = evaluatePerf(perf_tab[i]);
+                best_learning_rate = i;
+            }
+        }
+
+        delete problem;
+        cout << "\n\nThe best learning rate is " << best_learning_rate + 1 << endl;
+        return best_learning_rate + 1;
+};

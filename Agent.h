@@ -7,10 +7,14 @@
 #include "Sensor.h"
 #include "Graph.h"
 
-#define MAX_LEARNING_RATE 6
-#define TEST_DURATION 60s
-#define TEST_NUMBER 10
+// Variable définissant le w de la pénalité pour un bijou aspiré
 #define JEWEL_PENALTY 1
+
+// Variables pour les tests
+#define MAX_LEARNING_RATE 6
+#define TEST_DURATION 10s
+#define TEST_NUMBER 5
+
 
 class Agent {
 
@@ -18,8 +22,8 @@ public:
 	explicit Agent(Map *mp, bool smart = false);
 	~Agent();
 
-	void agentWork();
-    std::vector<Graph::node> getActions();
+	void agentWork(int);
+    std::vector<Graph::node> getActions(int);
 
 	Sensor * sens;
 	Effector * eff;
@@ -32,7 +36,8 @@ public:
 
 	float perfEval() const;
 	float evaluatePerf(std::vector<float>);
-	void perform(int&, const int&);
+	void perform(int, const int);
+    int runTest();
 
 private:
 
