@@ -31,17 +31,17 @@ Agent::~Agent() {
 
 }
 
-void Agent::agentWork(int UC) {
+void Agent::agentWork(int UC, int wait_time) {
 
     switch (UC) {
         case 1:
-            perform(4, UC);
+            perform(4, UC, wait_time);
             break;
         case 2 ... 3:
-            perform(2, UC);
+            perform(2, UC, wait_time);
             break;
         case 4:
-            perform(runTest(), UC);
+            perform(runTest(), UC, wait_time);
             break;
     }
 
@@ -75,9 +75,9 @@ float Agent::evaluatePerf(vector<float> perfs) {
 	return avg;
 }
 
-void Agent::perform(const int lr, const int UC) {
+void Agent::perform(const int lr, const int UC, int wait_time) {
 
-    int stepNumber = 0;
+    int stepNumber = 0, tick = 0;
     problem = new Graph(map);
 
     while (true) {
@@ -104,6 +104,12 @@ void Agent::perform(const int lr, const int UC) {
         batteryUsed += stepNumber;
 
         actionList.pop_back();
+
+		tick++;
+	    if (tick > 50){
+		    this_thread::sleep_for(chrono::seconds (wait_time));
+			tick = 0;
+		}
     }
 }
 

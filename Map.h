@@ -46,7 +46,7 @@ public:
 	Cell* getCell(int, int);
 
 	void mapUpdator();
-	void objSpawn();    // thread func
+	void objSpawn(int);    // thread func
 
 	void clean();
 	void pickup();

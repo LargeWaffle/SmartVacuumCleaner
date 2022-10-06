@@ -22,7 +22,7 @@ public:
 	explicit Agent(Map *mp, bool smart = false);
 	~Agent();
 
-	void agentWork(int);
+	void agentWork(int, int);
     std::vector<Graph::node> getActions(int);
 
 	Sensor * sens;
@@ -36,7 +36,7 @@ public:
 
 	float perfEval() const;
 	float evaluatePerf(std::vector<float>);
-	void perform(int, const int);
+	void perform(int, const int, int);
     int runTest();
 
 private:

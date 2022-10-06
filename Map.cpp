@@ -44,10 +44,19 @@ void Map::mapUpdator(){
 			j->spawnUpdate();
 }
 
-void Map::objSpawn(){
+void Map::objSpawn(int wait_time){
+	int tick = 0;
+
 	while(true) {
 		this_thread::sleep_for(chrono::milliseconds (1));
 	    mapUpdator();
+
+		tick++;
+		if (tick > 50){
+			this_thread::sleep_for(chrono::seconds (wait_time));
+			tick = 0;
+		}
+
 	}
 }
 
